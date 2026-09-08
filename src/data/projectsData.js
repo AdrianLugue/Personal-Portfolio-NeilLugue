@@ -1,0 +1,161 @@
+import sakloLawMockup from '../assets/SakloLaw_Mockup.png';
+import quizEasyMockup from '../assets/QuizEasy_Mockup.png';
+import portfolioMockup from '../assets/Portfolio_Mockup.png';
+
+export const PROJECTS_DATA = [
+  {
+    id: '01',
+    title: 'SakloLaw: AI Legal Aid Assistant',
+    category: 'Mobile Application · Capstone Project',
+    tag: 'Institutional Capstone',
+    year: '2025',
+    role: 'Lead Full-Stack & AI Developer',
+    organization: 'Bulacan State University',
+    tagline: 'An AI-powered mobile legal assistant that democratizes access to Philippine laws utilizing Large Language Models and a robust Retrieval-Augmented Generation (RAG) pipeline.',
+    description:
+      'Marginalized Filipinos face significant barriers to legal aid due to high consultation costs, a shortage of public attorneys, and complex legal jargon. SakloLaw bridges this gap by providing an accessible, bilingual (English and Filipino) AI-powered mobile application that uses Retrieval-Augmented Generation to deliver context-aware, accurately cited legal guidance based on verified Philippine laws.',
+    mockupImage: sakloLawMockup,
+    deviceType: 'mobile',
+    isTurnedOver: true,
+    turnoverMessage:
+      'Official institutional capstone project turned over to Bulacan State University. Source code repositories and production environments are archived under institutional custody. Video walkthrough and visual gallery are provided below.',
+    media: [
+      {
+        id: 'mockup-primary',
+        type: 'image',
+        title: '3-Device Mobile Interface Mockup',
+        url: sakloLawMockup,
+        caption: 'Mockup featuring the SakloLaw mobile interface, showcasing the AI chatbot interaction, offline legal knowledge base, and attorney directory.',
+      },
+      {
+        id: 'video-walkthrough',
+        type: 'video',
+        title: 'End-to-End Capstone Video Walkthrough',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/etMBJ3EpJFI',
+        caption: 'End-to-end demonstration of the SakloLaw mobile application and its Django-powered web administrative dashboard.',
+      },
+    ],
+    techStack: [
+      'React Native',
+      'Django (Python)',
+      'PostgreSQL',
+      'SQLite (Offline)',
+      'FAISS Vector DB',
+      'DeepSeek R1 / deepseek-reasoner',
+      'BGE-M3 Embeddings',
+      'Selenium',
+      'JavaScript (ES6+)',
+    ],
+    highlights: [
+      'Engineered a scalable cross-platform mobile frontend using React Native, providing accessible legal aid interfaces for both English and Filipino speakers.',
+      'Developed a robust Python and Django backend to manage user authentication, API routing, and system analytics via a web-based administrative panel.',
+      'Implemented an advanced Retrieval-Augmented Generation (RAG) pipeline utilizing deepseek-reasoner and bge-m3 embeddings to dynamically retrieve and cite accurate Philippine legal texts.',
+      'Architected a hybrid database system utilizing PostgreSQL for cloud data, SQLite for offline legal document access, and FAISS for high-performance vector similarity searches.',
+      'Designed an automated citation system that minimizes AI hallucinations by explicitly grounding chatbot responses in verified Republic Acts, statutes, and Supreme Court decisions.',
+    ],
+    stats: [
+      { label: 'ISO/IEC 25010 Rating', value: '4.62 / 5.00' },
+      { label: 'Test Case Pass Rate', value: '93% (83/89)' },
+      { label: 'Indexed Legal Texts', value: '25,290+' },
+    ],
+    accentColor: '#0070daff',
+    githubUrl: null, // Turned over to BulSU
+    liveUrl: null,
+  },
+  {
+    id: '02',
+    title: 'QuizEasy: Document-to-Knowledge AI Platform',
+    category: 'Full-Stack Web & AI Platform · EdTech',
+    tag: 'AI Study Platform',
+    year: '2025',
+    role: 'Full-Stack Developer & UI/UX Designer',
+    organization: 'Independent Engineering',
+    tagline: 'An AI-powered study companion that converts unstructured PDFs, text prompts, and lecture notes into interactive assessments and 3D flashcard decks.',
+    description:
+      'Active recall and practice testing are essential for mastering complex subjects, but manually creating quizzes from dense lecture slides and textbook PDFs takes hours. QuizEasy automates question generation via OpenAI GPT-4 and Groq LLM pipelines with structured JSON schemas, offering dual study modalities (timed assessments and 3D spatial flashcard flips), real-time session recovery, and historical attempt analytics.',
+    mockupImage: quizEasyMockup,
+    deviceType: 'desktop',
+    isTurnedOver: false,
+    liveUrl: 'https://quiz-easy-peach.vercel.app',
+    githubUrl: 'https://github.com/AdrianLugue/AI-Quiz-Builder',
+    media: [
+      {
+        id: 'quizeasy-overview',
+        type: 'image',
+        title: 'QuizEasy — AI Study Platform Interface',
+        url: quizEasyMockup,
+        caption: 'Upload PDF syllabi or enter prompts to generate structured multiple-choice questions with instant rationales and 3D flashcard decks.',
+      },
+    ],
+    techStack: [
+      'Next.js 14 (App Router)',
+      'TypeScript',
+      'Tailwind CSS',
+      'PostgreSQL (Supabase/Neon)',
+      'Drizzle ORM',
+      'NextAuth v5 (Auth.js)',
+      'OpenAI GPT-4',
+      'Groq SDK',
+      'PDF-Parse',
+      'CSS 3D Transforms',
+    ],
+    highlights: [
+      'Engineered an automated document ingestion pipeline supporting multipart PDF buffers and text prompts to generate structured MCQs with detailed explanations and distractors.',
+      'Designed dual interactive study modalities: a Timed Assessment mode with live question tracking and instant feedback, plus a 3D Spatial Flashcard Flip mode with active recall mastery grouping.',
+      'Integrated OpenAI and Groq LLM pipelines with custom sanitization middleware to strip markdown formatting and enforce strict JSON schemas prior to PostgreSQL commits.',
+      'Architected multi-tenant relational schemas using Drizzle ORM and Supabase PostgreSQL to persist quizzes, attempt histories, and performance analytics.',
+      'Implemented secure session authentication with NextAuth v5 (Google OAuth 2.0) and local storage state caching for seamless mid-quiz session recovery.',
+    ],
+    stats: [
+      { label: 'Format Support', value: 'PDFs' },
+      { label: 'Study Modalities', value: 'Flash Cards and MCQ' },
+      { label: 'LLM Engine', value: 'OpenAI + Groq' },
+    ],
+    accentColor: '#ffb94fff',
+  },
+  {
+    id: '03',
+    title: 'Personal Portfolio',
+    category: 'Full-Stack Web Engineering · Creative Design',
+    tag: 'Personal Portfolio',
+    year: '2026',
+    role: 'Frontend & Creative Developer',
+    organization: 'Independent Engineering',
+    tagline: 'High-performance developer portfolio featuring interactive WebGL shader canvases, 3D coverflow carousel, and full-bleed Project Explorer.',
+
+    mockupImage: portfolioMockup,
+    deviceType: 'desktop',
+    isTurnedOver: false,
+    liveUrl: null,
+    githubUrl: 'https://github.com/AdrianLugue',
+    media: [
+      {
+        id: 'portfolio-overview',
+        type: 'image',
+        title: 'Portfolio Architecture & Interactive Studio',
+        url: portfolioMockup,
+        caption: 'Full-bleed project explorer, WebGL paper dither shaders, and live GitHub telemetry integration.',
+      },
+    ],
+    techStack: [
+      'React 19',
+      'Vite',
+      'Tailwind CSS',
+      'React Router',
+      'WebGL / GLSL Shaders',
+      'Lucide React',
+      'GitHub REST API',
+      'JavaScript (ES6+)',
+    ],
+    highlights: [
+      'Architected a dual-view application featuring a 3D stacked coverflow landing page and a full-bleed studio project explorer with client-side routing.',
+      'Integrated real-time WebGL paper dithering shader backgrounds and interactive ASCII/dither portrait canvases.',
+      'Engineered dynamic GitHub contribution heatmap fetching live commit telemetry from GitHub REST APIs.',
+      'Built modular, accessible UI design system using custom golden-ratio tokens, glassmorphic surfaces, and seamless responsive layouts.',
+    ],
+    stats: [
+
+    ],
+    accentColor: '#C6B99B',
+  },
+];
