@@ -73,7 +73,7 @@ export default function Projects() {
   return (
     <div
       ref={projectsRef}
-      className={`section-lazy-render relative z-10 w-full flex-1 flex flex-col justify-start px-0 py-1 sm:py-2 bg-black overflow-visible select-none ${isRevealed ? 'is-revealed' : ''
+      className={`section-lazy-render relative z-10 w-full flex-1 flex flex-col justify-start px-0 py-1 sm:py-2 overflow-visible select-none ${isRevealed ? 'is-revealed' : ''
         }`}
     >
       {/* Section Header */}

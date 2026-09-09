@@ -11,6 +11,32 @@ import { SmoothScrollProvider } from './context/SmoothScrollContext';
 
 const ProjectExplorer = lazy(() => import('./components/ProjectExplorer'));
 
+class PageErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex-1 w-full h-full flex flex-col items-center justify-center p-6 space-y-4 text-center bg-[#060504]">
+          <h3 className="font-montserrat font-bold text-xl text-white">Something went wrong loading this view</h3>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 rounded-xl bg-[#FFD54F] text-black font-bold text-xs font-mono uppercase cursor-pointer"
+          >
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function PageLoader() {
   return (
     <div className="flex-1 w-full h-full flex flex-col items-center justify-center space-y-3 bg-[#060504] text-neutral-400">
@@ -40,29 +66,47 @@ function HomePage() {
       {/* Main Content with Smooth Section Glide */}
       <main className="relative z-10 flex-1">
         {/* Section 01: Hero Section */}
-        <section id="hero" className="min-h-screen h-[100dvh] flex items-center justify-center px-4 sm:px-8 lg:px-12 overflow-hidden">
+        <section id="hero" className="min-h-screen h-auto lg:h-[100dvh] flex items-center justify-center px-4 sm:px-8 lg:px-12 pt-[88px] sm:pt-[100px] lg:pt-0 pb-12 lg:pb-0 overflow-visible lg:overflow-hidden">
           <Hero />
         </section>
 
         {/* Section 02: Tech Stack Section */}
-        <section id="tech-stack" className="min-h-screen h-[100dvh] flex flex-col justify-start px-0 w-full pt-20 sm:pt-22 lg:pt-24 pb-4 sm:pb-6 overflow-hidden">
+        <section id="tech-stack" className="min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start px-0 w-full pt-20 sm:pt-22 lg:pt-24 pb-12 sm:pb-16 lg:pb-6 overflow-visible lg:overflow-hidden">
           <TechStack />
         </section>
 
-        {/* Section 03: About Me Section */}
-        <section id="about" className="min-h-screen h-[100dvh] flex flex-col justify-start bg-black px-3 sm:px-8 lg:px-12 pt-20 sm:pt-22 lg:pt-24 pb-4 sm:pb-6 overflow-hidden">
+        {/* Section 03: About Me Section (Solid pure black background for maximum readability) */}
+        <section id="about" className="relative z-10 min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start bg-black px-3 sm:px-8 lg:px-12 pt-20 sm:pt-22 lg:pt-24 pb-12 sm:pb-16 lg:pb-6 overflow-visible lg:overflow-hidden">
           <About />
         </section>
 
-        {/* Section 04: Projects Carousel Section */}
-        <section id="projects" className="min-h-screen h-[100dvh] flex flex-col justify-start bg-black px-2 sm:px-6 lg:px-10 pt-20 sm:pt-22 lg:pt-24 pb-4 sm:pb-6 overflow-hidden">
-          <Projects />
-        </section>
+        {/* ── Seamless Lower Atmosphere: Projects to Contact ── */}
+        <div className="relative w-full overflow-hidden">
+          {/* Bottom Shader Background spanning Projects & Contact seamlessly */}
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <ShaderBackground />
+            {/* Smooth gradient fade-in from About Me's pure black */}
+            <div
+              className="absolute top-0 inset-x-0 h-[22vh] pointer-events-none"
+              style={{ background: 'linear-gradient(to bottom, #000000 0%, transparent 100%)' }}
+            />
+            {/* Bottom edge vignette */}
+            <div
+              className="absolute bottom-0 inset-x-0 h-[15vh] pointer-events-none"
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, #000000 100%)' }}
+            />
+          </div>
 
-        {/* Section 05: Contact Section */}
-        <section id="contact" className="min-h-screen h-[100dvh] flex flex-col justify-start bg-black px-3 sm:px-8 lg:px-12 pt-20 sm:pt-22 lg:pt-24 pb-4 sm:pb-6 overflow-hidden">
-          <Contact />
-        </section>
+          {/* Section 04: Projects Carousel Section */}
+          <section id="projects" className="relative z-10 min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start px-2 sm:px-6 lg:px-10 pt-20 sm:pt-22 lg:pt-24 pb-12 sm:pb-16 lg:pb-6 overflow-visible lg:overflow-hidden">
+            <Projects />
+          </section>
+
+          {/* Section 05: Contact Section */}
+          <section id="contact" className="relative z-10 min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start px-3 sm:px-8 lg:px-12 pt-20 sm:pt-22 lg:pt-24 pb-16 sm:pb-20 lg:pb-6 overflow-visible lg:overflow-hidden">
+            <Contact />
+          </section>
+        </div>
       </main>
     </div>
   );
@@ -75,9 +119,11 @@ function ProjectExplorerPage() {
       <Navbar />
 
       {/* Full-Screen Explorer Content with Lazy Loading */}
-      <Suspense fallback={<PageLoader />}>
-        <ProjectExplorer />
-      </Suspense>
+      <PageErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <ProjectExplorer />
+        </Suspense>
+      </PageErrorBoundary>
     </div>
   );
 }

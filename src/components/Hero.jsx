@@ -124,6 +124,8 @@ export function DitherCascadeText({
   return (
     <span
       onMouseEnter={triggerCascade}
+      onClick={triggerCascade}
+      onTouchStart={triggerCascade}
       className={`inline-block cursor-pointer select-none whitespace-pre ${className}`}
     >
       {chars.map((item, idx) => {
@@ -157,9 +159,8 @@ export default function Hero() {
   return (
     <div
       ref={heroRef}
-      className={`w-full max-w-[1680px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 xl:gap-14 items-center my-auto py-2 sm:py-4 lg:py-6 xl:py-8 ${
-        isRevealed ? 'is-revealed' : ''
-      }`}
+      className={`w-full max-w-[1680px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 xl:gap-14 items-center my-auto py-2 sm:py-4 lg:py-6 xl:py-8 ${isRevealed ? 'is-revealed' : ''
+        }`}
     >
       {/* LEFT COLUMN: Clean Typography with Dither Glyph Cascade (50% split) */}
       <div className="lg:col-span-6 flex flex-col items-start justify-center space-y-2.5 sm:space-y-3.5 lg:space-y-4 xl:space-y-5">
@@ -169,7 +170,7 @@ export default function Hero() {
 
           {/* Large Name with Dither Glyph Cascade */}
           <div className="relative group inline-block reveal-child reveal-delay-0">
-            <h1 className="relative font-montserrat font-black text-4xl sm:text-6xl md:text-7xl lg:text-[72px] xl:text-[88px] 2xl:text-[100px] leading-[1.02] tracking-[0.02em] uppercase select-none text-gold-gradient">
+            <h1 className="relative font-montserrat font-black text-[32px] xs:text-4xl sm:text-6xl md:text-7xl lg:text-[72px] xl:text-[88px] 2xl:text-[100px] leading-[1.05] tracking-[0.02em] uppercase select-none text-gold-gradient">
               <DitherCascadeText
                 text="Neil Lugue"
                 staggerMs={40}
@@ -180,7 +181,7 @@ export default function Hero() {
 
           {/* Subtitle with Dither Glyph Cascade */}
           <div className="pt-0.5 sm:pt-1 reveal-child reveal-delay-1">
-            <p className="text-white/90 font-montserrat font-semibold text-lg sm:text-xl lg:text-[22px] xl:text-[26px] tracking-[0.03em]">
+            <p className="text-white/90 font-montserrat font-semibold text-base sm:text-xl lg:text-[22px] xl:text-[26px] tracking-[0.03em]">
               <DitherCascadeText
                 text="Full-Stack Developer · AI & Web Apps"
                 className="hover:text-[#FFD54F] transition-colors"
@@ -193,15 +194,14 @@ export default function Hero() {
 
         {/* Editorial Narrative Sub-tagline */}
         <p className="text-neutral-300 font-light text-[13px] sm:text-[14px] lg:text-[15px] xl:text-[16px] leading-[1.65] lg:leading-[1.75] max-w-xl reveal-child reveal-delay-2">
-          Engineering AI-assisted applications, scalable backend systems, and fluid mobile experiences with hands-on craft in{' '}
-          <span className="text-[#FFD54F] font-normal">React Native</span>,{' '}
+          I build full-stack apps and mobile experiences, from AI-assisted tools to scalable backend systems. Comfortable across React Native, Python, React, and PostgreSQL.          <span className="text-[#FFD54F] font-normal">React Native</span>,{' '}
           <span className="text-[#FFD54F] font-normal">Python</span>,{' '}
           <span className="text-[#FFD54F] font-normal">React</span>, and{' '}
           <span className="text-[#FFD54F] font-normal">PostgreSQL</span>.
         </p>
 
         {/* Action Buttons & Socials */}
-        <div className="flex flex-wrap items-center gap-5 pt-1 reveal-child reveal-delay-3">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-5 pt-1 reveal-child reveal-delay-3">
           <Button
             href="#projects"
             iconRight={<ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
@@ -259,9 +259,9 @@ export default function Hero() {
       </div>
 
       {/* RIGHT COLUMN: Frameless Atmospheric Dithered Portrait (50% split - Half Page) */}
-      <div className="lg:col-span-6 flex justify-center items-center select-none reveal-child reveal-delay-1">
+      <div className="lg:col-span-6 flex justify-center items-center select-none reveal-child reveal-delay-1 w-full pt-6 sm:pt-8 lg:pt-0">
         <DitherPortrait
-          className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-[540px] xl:max-w-[660px] 2xl:max-w-[760px] h-[min(480px,68vh)] sm:h-[min(560px,74vh)] md:h-[min(620px,78vh)] lg:h-[min(700px,82vh)] xl:h-[min(780px,85vh)] 2xl:h-[min(840px,88vh)] drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
+          className="w-full max-w-[340px] xs:max-w-[390px] sm:max-w-[460px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[680px] 2xl:max-w-[780px] h-[390px] xs:h-[450px] sm:h-[520px] md:h-[580px] lg:h-[min(700px,82vh)] xl:h-[min(780px,85vh)] 2xl:h-[min(840px,88vh)] drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
         />
       </div>
 

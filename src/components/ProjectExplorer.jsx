@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Dithering } from '@paper-design/shaders-react';
 import {
@@ -84,6 +84,30 @@ export default function ProjectExplorer() {
     handleSelectProject(PROJECTS_DATA[nextIdx].id);
   };
 
+  const touchStartX = useRef(0);
+
+  const handleMediaTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleMediaTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX;
+    if (selectedProject?.media && selectedProject.media.length > 1) {
+      if (diff > 45) {
+        // Swipe Left -> Next Media Slide
+        setActiveMediaIndex((prev) =>
+          prev === selectedProject.media.length - 1 ? 0 : prev + 1
+        );
+      } else if (diff < -45) {
+        // Swipe Right -> Prev Media Slide
+        setActiveMediaIndex((prev) =>
+          prev === 0 ? selectedProject.media.length - 1 : prev - 1
+        );
+      }
+    }
+  };
+
   const activeMediaItem =
     selectedProject?.media && selectedProject.media[activeMediaIndex]
       ? selectedProject.media[activeMediaIndex]
@@ -94,11 +118,56 @@ export default function ProjectExplorer() {
   return (
     <div className="flex-1 w-full min-h-0 flex flex-col lg:flex-row bg-[#050505] text-white overflow-hidden select-none">
 
-      {/* ── LEFT SIDEBAR: Collapsible Project Switcher ── */}
+      {/* ── MOBILE TOP STICKY CHIP BAR (Clean, fast horizontal switcher on mobile) ── */}
+      <div className="flex lg:hidden w-full overflow-x-auto bg-[#0C0B09] border-b border-white/10 p-2 sm:p-2.5 gap-1.5 items-center custom-scrollbar shrink-0 z-30 sticky top-0">
+        {/* All Projects Grid Toggle Pill */}
+        <button
+          onClick={() => {
+            if (viewMode === 'grid') {
+              setViewMode('detail');
+              navigate(`/projects/${selectedProjectId}`);
+            } else {
+              setViewMode('grid');
+              navigate('/projects');
+            }
+          }}
+          className={`px-3 py-1.5 rounded-xl text-xs font-montserrat font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+            viewMode === 'grid'
+              ? 'bg-[#FFD54F] text-black shadow-[0_0_12px_rgba(255,213,79,0.3)]'
+              : 'bg-white/[0.04] text-neutral-300 hover:text-white border border-white/10'
+          }`}
+        >
+          <Grid size={13} />
+          <span>All ({PROJECTS_DATA.length})</span>
+        </button>
+
+        {/* Project Selector Pills */}
+        {PROJECTS_DATA.map((project) => {
+          const isSelected = viewMode === 'detail' && selectedProjectId === project.id;
+          return (
+            <button
+              key={project.id}
+              onClick={() => handleSelectProject(project.id)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-montserrat font-medium flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                isSelected
+                  ? 'bg-[#FFD54F] text-black font-bold shadow-[0_0_12px_rgba(255,213,79,0.3)]'
+                  : 'bg-white/[0.03] text-neutral-400 hover:text-white hover:bg-white/[0.08] border border-white/5'
+              }`}
+            >
+              <span className={`font-mono text-[10.5px] ${isSelected ? 'text-black/70' : 'text-[#C6B99B]'}`}>
+                {project.id}
+              </span>
+              <span className="truncate max-w-[140px] sm:max-w-none">{project.title}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── DESKTOP LEFT SIDEBAR: Collapsible Project Switcher ── */}
       <aside
-        className={`flex-shrink-0 bg-[#090807] border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col h-auto lg:h-full z-20 transition-all duration-300 ease-in-out ${isSidebarCollapsed
-          ? 'w-full lg:w-[68px]'
-          : 'w-full lg:w-[280px] xl:w-[300px]'
+        className={`hidden lg:flex flex-shrink-0 bg-[#090807] border-r border-white/10 flex-col h-full z-20 transition-all duration-300 ease-in-out ${isSidebarCollapsed
+          ? 'w-[68px]'
+          : 'w-[280px] xl:w-[300px]'
           }`}
       >
         {/* Sidebar Header: Collapse Toggle + Mode Buttons */}
@@ -320,20 +389,21 @@ export default function ProjectExplorer() {
           <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
 
             {/* Sub-header Bar: Breadcrumbs + Controls */}
-            <div className="px-5 sm:px-8 py-3 border-b border-white/10 bg-[#0C0B09] flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-2 sm:gap-3">
+            <div className="px-3 sm:px-8 py-2.5 sm:py-3 border-b border-white/10 bg-[#0C0B09] flex items-center justify-between shrink-0 gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
                 <button
                   onClick={() => {
                     setViewMode('grid');
                     navigate('/projects');
                   }}
-                  className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 text-xs font-mono text-neutral-400 hover:text-white transition-colors cursor-pointer shrink-0"
                 >
                   <ArrowLeft size={13} />
-                  <span>All Projects</span>
+                  <span className="hidden xs:inline">All Projects</span>
+                  <span className="xs:hidden">All</span>
                 </button>
                 <span className="text-neutral-600">/</span>
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#FFD54F] bg-[#FFD54F]/10 px-2.5 py-0.5 rounded border border-[#FFD54F]/20 font-semibold">
+                <span className="text-[10.5px] sm:text-[11px] font-mono uppercase tracking-wider text-[#FFD54F] bg-[#FFD54F]/10 px-2 sm:px-2.5 py-0.5 rounded border border-[#FFD54F]/20 font-semibold truncate max-w-[130px] sm:max-w-none">
                   /{selectedProject.id} {selectedProject.title}
                 </span>
                 {selectedProject.isTurnedOver && (
@@ -345,23 +415,23 @@ export default function ProjectExplorer() {
               </div>
 
               {/* Prev / Next controls */}
-              <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-xl border border-white/10">
+              <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-xl border border-white/10 shrink-0">
                 <button
                   onClick={handlePrev}
                   aria-label="Previous Project"
-                  className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
+                  className="p-1 sm:p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
                 >
-                  <ChevronLeft size={16} />
+                  <ChevronLeft size={15} />
                 </button>
-                <span className="text-[11px] font-mono text-neutral-400 px-1.5">
+                <span className="text-[10.5px] sm:text-[11px] font-mono text-neutral-400 px-1 sm:px-1.5">
                   {currentIndex + 1} / {PROJECTS_DATA.length}
                 </span>
                 <button
                   onClick={handleNext}
                   aria-label="Next Project"
-                  className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
+                  className="p-1 sm:p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
                 >
-                  <ChevronRight size={16} />
+                  <ChevronRight size={15} />
                 </button>
               </div>
             </div>
@@ -370,10 +440,14 @@ export default function ProjectExplorer() {
             <div data-lenis-prevent className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 overflow-y-auto lg:overflow-hidden">
 
               {/* ── LEFT COLUMN: Interactive Media Carousel Showcase (58%) ── */}
-              <div className="lg:col-span-7 flex flex-col p-3.5 sm:p-5 lg:p-6 border-b lg:border-b-0 lg:border-r border-white/10 bg-[#060504] min-h-[320px] sm:min-h-[380px] lg:min-h-0 overflow-hidden">
+              <div className="lg:col-span-7 flex flex-col p-3 sm:p-5 lg:p-6 border-b lg:border-b-0 lg:border-r border-white/10 bg-[#060504] min-h-[260px] sm:min-h-[340px] lg:min-h-0 overflow-hidden">
 
                 {/* Media Carousel Viewport */}
-                <div className="relative flex-1 w-full min-h-[300px] rounded-[22px] overflow-hidden bg-[#0A0908] border border-white/15 flex items-center justify-center shadow-inner group">
+                <div
+                  onTouchStart={handleMediaTouchStart}
+                  onTouchEnd={handleMediaTouchEnd}
+                  className="relative flex-1 w-full min-h-[240px] sm:min-h-[300px] rounded-[18px] sm:rounded-[22px] overflow-hidden bg-[#0A0908] border border-white/15 flex items-center justify-center shadow-inner group cursor-grab active:cursor-grabbing"
+                >
 
                   {/* Paper Dither Background Aura */}
                   <div className="absolute inset-0 pointer-events-none opacity-50">
@@ -525,7 +599,7 @@ export default function ProjectExplorer() {
               </div>
 
               {/* ── RIGHT COLUMN: Case Study Details & Features (42%) ── */}
-              <div data-lenis-prevent className="lg:col-span-5 flex flex-col h-full overflow-y-auto p-4 sm:p-5 lg:p-6 space-y-4 sm:space-y-5 custom-scrollbar text-left bg-[#0A0908]">
+              <div data-lenis-prevent className="lg:col-span-5 flex flex-col h-auto lg:h-full lg:overflow-y-auto p-4 sm:p-5 lg:p-6 space-y-4 sm:space-y-5 custom-scrollbar text-left bg-[#0A0908]">
 
                 {/* Title & Tagline */}
                 <div className="space-y-1.5">
@@ -677,6 +751,29 @@ export default function ProjectExplorer() {
                       View Source Code
                     </Button>
                   )}
+                </div>
+
+                {/* Mobile Next/Prev Project Navigation Bar */}
+                <div className="flex lg:hidden items-center justify-between pt-4 pb-8 border-t border-white/10 gap-2">
+                  <button
+                    onClick={handlePrev}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-montserrat text-neutral-300 hover:text-white cursor-pointer"
+                  >
+                    <ChevronLeft size={15} />
+                    <span>Prev Project</span>
+                  </button>
+
+                  <span className="text-[11px] font-mono text-neutral-500">
+                    {currentIndex + 1} of {PROJECTS_DATA.length}
+                  </span>
+
+                  <button
+                    onClick={handleNext}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-montserrat text-[#FFD54F] hover:bg-[#FFD54F]/10 cursor-pointer"
+                  >
+                    <span>Next Project</span>
+                    <ChevronRight size={15} />
+                  </button>
                 </div>
 
               </div>

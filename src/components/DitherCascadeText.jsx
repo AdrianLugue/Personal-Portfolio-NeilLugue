@@ -110,7 +110,9 @@ export default function DitherCascadeText({
   return (
     <span
       onMouseEnter={triggerCascade}
-      className={`inline-block select-none whitespace-pre ${className}`}
+      onClick={triggerCascade}
+      onTouchStart={triggerCascade}
+      className={`inline-block cursor-pointer select-none whitespace-pre ${className}`}
     >
       {chars.map((item, idx) => {
         const isDither = item.state > 0;

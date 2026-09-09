@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, Component } from 'react';
+import React, { useRef, useState, useEffect, useCallback, Component } from 'react';
 import { Dithering, ImageDithering } from '@paper-design/shaders-react';
 
 // Error boundary for shaders
@@ -17,22 +17,32 @@ class ShaderBoundary extends Component {
 }
 
 /**
- * Frameless Atmospheric Dither Portrait
- * Combination 1 & 2:
- * 1. Frameless silhouette that dissolves softly into the background with cursor dither reveal
- * 2. Atmospheric luminous gold dither aura radiating organically behind shoulders
+ * High-Performance Frameless Atmospheric Dither Portrait
+ * Features:
+ * - Desktop: Smooth cursor-following spotlight dither reveal
+ * - Mobile Touch: Interactive finger torchlight dragging
+ * - Zero React re-renders on interaction (direct DOM/GPU clipPath updates)
+ * - Pure idle state when not interacted with (zero ambient sweep)
  */
 export default function DitherPortrait({ className = '', style = {} }) {
   const containerRef = useRef(null);
+  const spotlightRef = useRef(null);
+  const auraRef = useRef(null);
+  const glowRef = useRef(null);
+
   const [isInView, setIsInView] = useState(true);
-  const [cursor, setCursor] = useState({ x: 50, y: 40 });
-  const [hovering, setHovering] = useState(false);
-  const [radius, setRadius] = useState(0);
-  const rafRef = useRef(null);
+
+  // Animation values stored in refs for 120 FPS performance
+  const isLoopRunning = useRef(false);
+  const targetX = useRef(50);
+  const targetY = useRef(40);
+  const currentX = useRef(50);
+  const currentY = useRef(40);
   const targetRadius = useRef(0);
   const currentRadius = useRef(0);
+  const rafId = useRef(null);
 
-  // IntersectionObserver to pause when off-screen
+  // IntersectionObserver to pause rendering when off-screen
   useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
@@ -48,36 +58,106 @@ export default function DitherPortrait({ className = '', style = {} }) {
     return () => observer.disconnect();
   }, []);
 
-  // Smooth radius animation (only when in view)
-  useEffect(() => {
-    if (!isInView) return;
-    const animate = () => {
-      const diff = targetRadius.current - currentRadius.current;
-      currentRadius.current += diff * 0.14;
-      setRadius(Math.round(currentRadius.current));
-      rafRef.current = requestAnimationFrame(animate);
-    };
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [isInView]);
+  // Animation tick: smoothly lerps cursor & radius, updates DOM directly, stops when settled
+  const tick = useCallback(() => {
+    const radiusDiff = targetRadius.current - currentRadius.current;
+    const xDiff = targetX.current - currentX.current;
+    const yDiff = targetY.current - currentY.current;
 
-  const handleMouseMove = (e) => {
+    currentRadius.current += radiusDiff * 0.16;
+    currentX.current += xDiff * 0.2;
+    currentY.current += yDiff * 0.2;
+
+    if (spotlightRef.current) {
+      const r = Math.max(0, currentRadius.current).toFixed(1);
+      const x = currentX.current.toFixed(2);
+      const y = currentY.current.toFixed(2);
+      spotlightRef.current.style.clipPath = `circle(${r}px at ${x}% ${y}%)`;
+    }
+
+    // Check if settled (within sub-pixel margin)
+    const isSettled =
+      Math.abs(radiusDiff) < 0.15 &&
+      Math.abs(xDiff) < 0.1 &&
+      Math.abs(yDiff) < 0.1;
+
+    if (isSettled) {
+      currentRadius.current = targetRadius.current;
+      currentX.current = targetX.current;
+      currentY.current = targetY.current;
+      if (spotlightRef.current) {
+        spotlightRef.current.style.clipPath = `circle(${currentRadius.current}px at ${currentX.current}% ${currentY.current}%)`;
+      }
+      isLoopRunning.current = false;
+    } else {
+      rafId.current = requestAnimationFrame(tick);
+    }
+  }, []);
+
+  const startAnimation = useCallback(() => {
+    if (!isLoopRunning.current) {
+      isLoopRunning.current = true;
+      rafId.current = requestAnimationFrame(tick);
+    }
+  }, [tick]);
+
+  useEffect(() => {
+    return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
+  }, []);
+
+  const updateCoordinates = (clientX, clientY) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setCursor({ x, y });
-    targetRadius.current = 140;
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
+
+    targetX.current = Math.max(0, Math.min(100, x));
+    targetY.current = Math.max(0, Math.min(100, y));
+    targetRadius.current = 145;
   };
 
-  const handleMouseEnter = () => {
-    setHovering(true);
-    targetRadius.current = 140;
+  /* Mouse Event Handlers */
+  const handleMouseMove = (e) => {
+    updateCoordinates(e.clientX, e.clientY);
+    startAnimation();
+  };
+
+  const handleMouseEnter = (e) => {
+    updateCoordinates(e.clientX, e.clientY);
+    if (auraRef.current) auraRef.current.style.opacity = '0.75';
+    if (glowRef.current) glowRef.current.style.opacity = '0.9';
+    startAnimation();
   };
 
   const handleMouseLeave = () => {
-    setHovering(false);
     targetRadius.current = 0;
+    if (auraRef.current) auraRef.current.style.opacity = '0.4';
+    if (glowRef.current) glowRef.current.style.opacity = '0.5';
+    startAnimation();
+  };
+
+  /* Mobile Touch Event Handlers */
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0];
+    updateCoordinates(touch.clientX, touch.clientY);
+    if (auraRef.current) auraRef.current.style.opacity = '0.75';
+    if (glowRef.current) glowRef.current.style.opacity = '0.9';
+    startAnimation();
+  };
+
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0];
+    updateCoordinates(touch.clientX, touch.clientY);
+    startAnimation();
+  };
+
+  const handleTouchEnd = () => {
+    targetRadius.current = 0;
+    if (auraRef.current) auraRef.current.style.opacity = '0.4';
+    if (glowRef.current) glowRef.current.style.opacity = '0.5';
+    startAnimation();
   };
 
   return (
@@ -86,7 +166,10 @@ export default function DitherPortrait({ className = '', style = {} }) {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative group flex justify-center items-center select-none cursor-crosshair ${className}`}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      className={`relative group flex justify-center items-center select-none cursor-crosshair touch-none ${className}`}
       style={{
         width: '100%',
         aspectRatio: '499/750',
@@ -97,11 +180,12 @@ export default function DitherPortrait({ className = '', style = {} }) {
           LAYER 1: Atmospheric Golden Dither Aura (Behind Silhouette)
       ───────────────────────────────────────────── */}
       <div
+        ref={auraRef}
         className="absolute inset-0 pointer-events-none transition-opacity duration-700"
         style={{
           maskImage: 'radial-gradient(ellipse 65% 55% at 50% 38%, black 15%, transparent 75%)',
           WebkitMaskImage: 'radial-gradient(ellipse 65% 55% at 50% 38%, black 15%, transparent 75%)',
-          opacity: hovering ? 0.75 : 0.4,
+          opacity: 0.4,
         }}
       >
         <ShaderBoundary fallback={<div className="w-full h-full bg-[#FFD136]/15 blur-2xl" />}>
@@ -124,8 +208,9 @@ export default function DitherPortrait({ className = '', style = {} }) {
 
       {/* Extra ambient soft glow behind the head/torso */}
       <div
+        ref={glowRef}
         className="absolute w-[80%] h-[75%] top-[8%] rounded-full bg-gradient-to-b from-[#FFD136]/20 via-[#7F7255]/10 to-transparent blur-3xl pointer-events-none transition-opacity duration-700"
-        style={{ opacity: hovering ? 0.9 : 0.5 }}
+        style={{ opacity: 0.5 }}
       />
 
       {/* ─────────────────────────────────────────────
@@ -147,11 +232,12 @@ export default function DitherPortrait({ className = '', style = {} }) {
           draggable={false}
         />
 
-        {/* Dynamic interactive dither wave revealed on hover */}
+        {/* Dynamic interactive dither wave revealed on hover / touch */}
         <div
-          className="absolute inset-0 pointer-events-none transition-all duration-75"
+          ref={spotlightRef}
+          className="absolute inset-0 pointer-events-none"
           style={{
-            clipPath: `circle(${radius}px at ${cursor.x}% ${cursor.y}%)`,
+            clipPath: 'circle(0px at 50% 40%)',
             willChange: 'clip-path',
           }}
         >

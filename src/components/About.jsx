@@ -154,70 +154,73 @@ function GitHubStatusWidget({ username }) {
       </div>
 
       {/* Heatmap Grid & Month Labels */}
-      <div className="relative overflow-x-auto select-none py-1">
-        {/* Month Headers */}
-        <div className="flex gap-[3px] text-[9px] font-mono text-neutral-500 pl-4 mb-1">
-          {data?.monthHeaders?.map((m, idx) => (
-            <span
-              key={idx}
-              className="truncate"
-              style={{
-                width: idx < data.monthHeaders.length - 1
-                  ? `${(data.monthHeaders[idx + 1].weekIndex - m.weekIndex) * 16}px`
-                  : '34px',
-              }}
-            >
-              {m.name}
-            </span>
-          ))}
-        </div>
-
-        {/* Main Grid with Day Labels */}
-        <div className="flex items-center gap-1.5">
-          {/* Day of Week labels (M, W, F) */}
-          <div className="flex flex-col gap-[2px] sm:gap-[3px] text-[8px] font-mono text-neutral-600 h-[48px] sm:h-[56px] lg:h-[60px] justify-between pb-0.5">
-            {DAY_LABELS.map((d, i) => (
-              <span key={i} className="h-[6px] sm:h-[7px] flex items-center justify-center w-2.5">{d}</span>
+      <div className="relative overflow-x-auto select-none py-1 custom-scrollbar">
+        <div className="min-w-[520px] sm:min-w-0">
+          {/* Month Headers */}
+          <div className="flex gap-[3px] text-[9px] font-mono text-neutral-500 pl-4 mb-1">
+            {data?.monthHeaders?.map((m, idx) => (
+              <span
+                key={idx}
+                className="truncate"
+                style={{
+                  width: idx < data.monthHeaders.length - 1
+                    ? `${(data.monthHeaders[idx + 1].weekIndex - m.weekIndex) * 16}px`
+                    : '34px',
+                }}
+              >
+                {m.name}
+              </span>
             ))}
           </div>
 
-          {/* Grid Columns */}
-          <div className="flex gap-[2px] sm:gap-[3px] flex-1 h-[48px] sm:h-[56px] lg:h-[60px]">
-            {loading ? (
-              Array.from({ length: 28 }).map((_, w) => (
-                <div key={w} className="flex flex-col gap-[2px] sm:gap-[3px] flex-1">
-                  {Array.from({ length: 7 }).map((_, d) => (
-                    <div key={d} className="flex-1 rounded-[2px] bg-white/[0.04] animate-pulse" />
-                  ))}
-                </div>
-              ))
-            ) : data?.weeks ? (
-              data.weeks.map((week, wi) => (
-                <div key={wi} className="flex flex-col gap-[2px] sm:gap-[3px] flex-1">
-                  {week.map((day, di) => {
-                    const isHovered = hoveredCell?.date === day.date;
-                    return (
-                      <div
-                        key={di}
-                        onMouseEnter={() => day.level >= 0 && setHoveredCell(day)}
-                        onMouseLeave={() => setHoveredCell(null)}
-                        className={`flex-1 rounded-[2px] transition-all duration-150 relative ${day.level >= 0 ? 'hover:scale-125 hover:z-20 cursor-pointer' : 'pointer-events-none'
-                          }`}
-                        style={{
-                          backgroundColor: day.level < 0 ? 'transparent' : HEAT_COLORS[day.level],
-                          boxShadow: day.level >= 3
-                            ? '0 0 6px rgba(255, 213, 79, 0.45)'
-                            : isHovered
-                              ? '0 0 8px rgba(255, 255, 255, 0.6)'
-                              : 'none',
-                          border: day.level === 0 ? '1px solid rgba(255, 255, 255, 0.03)' : 'none',
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              ))
-            ) : null}
+          {/* Main Grid with Day Labels */}
+          <div className="flex items-center gap-1.5">
+            {/* Day of Week labels (M, W, F) */}
+            <div className="flex flex-col gap-[2px] sm:gap-[3px] text-[8px] font-mono text-neutral-600 h-[48px] sm:h-[56px] lg:h-[60px] justify-between pb-0.5">
+              {DAY_LABELS.map((d, i) => (
+                <span key={i} className="h-[6px] sm:h-[7px] flex items-center justify-center w-2.5">{d}</span>
+              ))}
+            </div>
+
+            {/* Grid Columns */}
+            <div className="flex gap-[2px] sm:gap-[3px] flex-1 h-[48px] sm:h-[56px] lg:h-[60px]">
+              {loading ? (
+                Array.from({ length: 28 }).map((_, w) => (
+                  <div key={w} className="flex flex-col gap-[2px] sm:gap-[3px] flex-1">
+                    {Array.from({ length: 7 }).map((_, d) => (
+                      <div key={d} className="flex-1 rounded-[2px] bg-white/[0.04] animate-pulse" />
+                    ))}
+                  </div>
+                ))
+              ) : data?.weeks ? (
+                data.weeks.map((week, wi) => (
+                  <div key={wi} className="flex flex-col gap-[2px] sm:gap-[3px] flex-1">
+                    {week.map((day, di) => {
+                      const isHovered = hoveredCell?.date === day.date;
+                      return (
+                        <div
+                          key={di}
+                          onMouseEnter={() => day.level >= 0 && setHoveredCell(day)}
+                          onMouseLeave={() => setHoveredCell(null)}
+                          onClick={() => day.level >= 0 && setHoveredCell((prev) => (prev?.date === day.date ? null : day))}
+                          className={`flex-1 rounded-[2px] transition-all duration-150 relative ${day.level >= 0 ? 'hover:scale-125 active:scale-125 hover:z-20 cursor-pointer' : 'pointer-events-none'
+                            }`}
+                          style={{
+                            backgroundColor: day.level < 0 ? 'transparent' : HEAT_COLORS[day.level],
+                            boxShadow: day.level >= 3
+                              ? '0 0 6px rgba(255, 213, 79, 0.45)'
+                              : isHovered
+                                ? '0 0 8px rgba(255, 255, 255, 0.6)'
+                                : 'none',
+                            border: day.level === 0 ? '1px solid rgba(255, 255, 255, 0.03)' : 'none',
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                ))
+              ) : null}
+            </div>
           </div>
         </div>
 
@@ -253,9 +256,8 @@ export default function About() {
   return (
     <div
       ref={aboutRef}
-      className={`section-lazy-render relative z-10 w-full flex-1 flex flex-col justify-start px-0 py-1 sm:py-2 ${
-        isRevealed ? 'is-revealed' : ''
-      }`}
+      className={`section-lazy-render relative z-10 w-full flex-1 flex flex-col justify-start px-0 py-1 sm:py-2 ${isRevealed ? 'is-revealed' : ''
+        }`}
     >
       {/* Section Header matching Tech Stack */}
       <div className="flex flex-col items-center text-center mb-3 sm:mb-4 lg:mb-5 px-4 sm:px-6 shrink-0">
@@ -328,13 +330,11 @@ export default function About() {
           <div className="reveal-child reveal-delay-2 grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5 lg:gap-6 pt-0.5">
             <div className="space-y-2 text-left">
               <p className="text-[11.5px] sm:text-[12px] xl:text-[13px] text-neutral-200 font-light leading-[1.7] text-justify">
-                I’ve always believed that the best software lives at the intersection of engineering rigor and tactile craft. The responsiveness of an interface is fundamentally dictated by how thoughtfully database schemas are indexed, how cleanly asynchronous state is managed, and how predictably network boundaries are bridged.
-              </p>
+                Good software is more than a nice-looking interface, but the interface is still where people actually meet your work. I care about that and how an app feels to use, how fast it responds, how little friction there is between what someone wants to do and doing it.              </p>
             </div>
             <div className="space-y-2 text-left">
               <p className="text-[11.5px] sm:text-[12px] xl:text-[13px] text-neutral-300 font-light leading-[1.7] text-justify">
-                Graduating Magna Cum Laude from Bulacan State University, I focused on building applications that eliminate real-world friction. From shipping offline-first React Native mobile apps to orchestrating PostgreSQL databases and WebGL shaders, I build software designed for resilience, clarity, and everyday utility.
-              </p>
+                I graduated Magna Cum Laude in IT from Bulacan State University, and since then I've focused on building apps that solve real, everyday problems instead of just checking boxes. I've shipped offline-first apps in React Native, built interfaces in React, and played around with WebGL for the visual side and always aiming for something that's solid under the hood and easy to actually use.              </p>
             </div>
           </div>
 
