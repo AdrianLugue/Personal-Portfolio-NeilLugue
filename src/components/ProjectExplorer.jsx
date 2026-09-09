@@ -733,6 +733,7 @@ export default function ProjectExplorer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       size="sm"
+                      className="w-full sm:w-auto sm:min-w-[200px]"
                       iconRight={<ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
                     >
                       Launch Live Platform
@@ -745,6 +746,7 @@ export default function ProjectExplorer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       size="sm"
+                      className="w-full sm:w-auto sm:min-w-[200px]"
                       iconLeft={<GitBranch size={14} />}
                       iconRight={<ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
                     >

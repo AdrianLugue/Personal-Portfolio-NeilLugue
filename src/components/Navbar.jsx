@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, Component } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Dithering } from '@paper-design/shaders-react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Download } from 'lucide-react';
 import DitherCascadeText from './DitherCascadeText';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
+import resumePdf from '../assets/Resume.pdf';
 
 class ShaderBoundary extends Component {
   constructor(props) {
@@ -33,6 +34,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Tech Stack', href: '#tech-stack', sectionId: 'tech-stack' },
     { name: 'About Me', href: '#about', sectionId: 'about' },
+    { name: 'Certifications', href: '#certifications', sectionId: 'certifications' },
     { name: 'Projects', href: '#projects', sectionId: 'projects' },
     { name: 'Contact', href: '#contact', sectionId: 'contact' },
   ];
@@ -67,6 +69,7 @@ export default function Navbar() {
       const sections = [
         { id: 'contact', el: document.getElementById('contact') },
         { id: 'projects', el: document.getElementById('projects') },
+        { id: 'certifications', el: document.getElementById('certifications') },
         { id: 'about', el: document.getElementById('about') },
         { id: 'tech-stack', el: document.getElementById('tech-stack') },
         { id: 'hero', el: document.getElementById('hero') },
@@ -209,8 +212,20 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* ── RIGHT: Spacer for symmetry ── */}
-        <div className="hidden md:flex items-center min-w-[100px] justify-end" />
+        {/* ── RIGHT: Resume / CV Download Button ── */}
+        <div className="hidden md:flex items-center min-w-[110px] justify-end">
+          <a
+            href={resumePdf}
+            download="Neil_Adrian_Lugue_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-[#FFD54F] border border-white/10 hover:border-[#FFD54F] text-neutral-300 hover:text-black font-montserrat font-semibold text-xs tracking-wider uppercase transition-all duration-200 shadow-sm flex items-center gap-1.5 cursor-pointer"
+            title="Download Resume"
+          >
+            <Download size={13} className="text-[#FFD54F] group-hover:text-black transition-colors" />
+            <span>Resume</span>
+          </a>
+        </div>
 
         {/* Mobile Menu Toggle */}
         <button
@@ -236,6 +251,21 @@ export default function Navbar() {
                 <span>{link.name}</span>
               </a>
             ))}
+
+            {/* Mobile Resume Download Button */}
+            <a
+              href={resumePdf}
+              download="Neil_Adrian_Lugue_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-[#FFD54F]/10 border border-[#FFD54F]/30 text-[#FFD54F] font-montserrat font-bold text-xs tracking-wider uppercase transition-all mt-1"
+            >
+              <div className="flex items-center gap-2">
+                <Download size={15} />
+                <span>Download Resume</span>
+              </div>
+              <span className="text-[10px] font-mono opacity-75">PDF</span>
+            </a>
           </div>
         </div>
       )}

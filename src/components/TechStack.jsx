@@ -133,7 +133,7 @@ export default function TechStack() {
         <div className="reveal-child reveal-delay-1 inline-flex p-1 rounded-full halftone-panel shadow-lg">
           <button
             onClick={() => setViewMode('marquee')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-montserrat font-medium transition-all duration-200 cursor-pointer ${viewMode === 'marquee'
+            className={`flex items-center justify-center min-w-[135px] sm:min-w-[155px] gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-montserrat font-medium transition-all duration-200 cursor-pointer ${viewMode === 'marquee'
               ? 'bg-[#7F7255] text-white shadow-lg shadow-[#7F7255]/40 ring-1 ring-white/60'
               : 'text-[#A3A3A3] hover:text-white hover:bg-white/5'
               }`}
@@ -143,7 +143,7 @@ export default function TechStack() {
           </button>
           <button
             onClick={() => setViewMode('rows')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-montserrat font-medium transition-all duration-200 cursor-pointer ${viewMode === 'rows'
+            className={`flex items-center justify-center min-w-[135px] sm:min-w-[155px] gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-montserrat font-medium transition-all duration-200 cursor-pointer ${viewMode === 'rows'
               ? 'bg-[#7F7255] text-white shadow-lg shadow-[#7F7255]/40 ring-1 ring-white/60'
               : 'text-[#A3A3A3] hover:text-white hover:bg-white/5'
               }`}

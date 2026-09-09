@@ -101,11 +101,31 @@
   background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: #222222;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #59533C;
+  background: #333333;
+}
+
+/* Dedicated Chat Widget Scrollbar */
+.chat-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(198, 185, 155, 0.3) transparent;
+}
+.chat-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(198, 185, 155, 0.25);
+  border-radius: 4px;
+}
+.chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 213, 79, 0.6);
 }
 
 /* Marquee infinite ticker */

@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import DitherPortrait from './DitherPortrait';
 import Button from './Button';
-import { GitBranch, GraduationCap, ArrowRight, ExternalLink, Mail } from 'lucide-react';
+import { GitBranch, GraduationCap, ArrowRight, ExternalLink, Mail, Award } from 'lucide-react';
 import useInView from '../hooks/useInView';
+import pythonCertPdf from '../assets/Python_Certificate.pdf';
 
 /* ─────────────────────────────────────────────
    MagneticWord — spring physics repellent text
@@ -353,10 +354,21 @@ export default function About() {
               target="_blank"
               rel="noopener noreferrer"
               size="sm"
+              className="w-full sm:w-auto sm:min-w-[210px]"
               iconLeft={<GitBranch size={12} />}
               iconRight={<ExternalLink size={11} className="opacity-80 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
             >
               Explore GitHub Repos
+            </Button>
+            <Button
+              href="#certifications"
+              size="sm"
+              variant="outline"
+              className="w-full sm:w-auto sm:min-w-[210px]"
+              iconLeft={<Award size={12} className="text-[#FFD54F]" />}
+              iconRight={<ArrowRight size={11} className="opacity-80 transition-transform group-hover:translate-x-0.5" />}
+            >
+              View Certifications
             </Button>
           </div>
 

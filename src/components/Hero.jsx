@@ -2,8 +2,9 @@ import React, { Component, useState, useEffect, useRef, useCallback } from 'reac
 import { HalftoneDots } from '@paper-design/shaders-react';
 import Button from './Button';
 import DitherPortrait from './DitherPortrait';
-import { ArrowUpRight, Mail } from 'lucide-react';
+import { ArrowUpRight, Mail, Download } from 'lucide-react';
 import useInView from '../hooks/useInView';
+import resumePdf from '../assets/Resume.pdf';
 
 class ShaderIconErrorBoundary extends Component {
   constructor(props) {
@@ -194,25 +195,30 @@ export default function Hero() {
 
         {/* Editorial Narrative Sub-tagline */}
         <p className="text-neutral-300 font-light text-[13px] sm:text-[14px] lg:text-[15px] xl:text-[16px] leading-[1.65] lg:leading-[1.75] max-w-xl reveal-child reveal-delay-2">
-          I build full-stack apps and mobile experiences, from AI-assisted tools to scalable backend systems. Comfortable across React Native, Python, React, and PostgreSQL.          <span className="text-[#FFD54F] font-normal">React Native</span>,{' '}
+          I build full-stack apps and mobile experiences, from AI-assisted tools to scalable backend systems. Comfortable across{' '}
+          <span className="text-[#FFD54F] font-normal">React Native</span>,{' '}
           <span className="text-[#FFD54F] font-normal">Python</span>,{' '}
           <span className="text-[#FFD54F] font-normal">React</span>, and{' '}
           <span className="text-[#FFD54F] font-normal">PostgreSQL</span>.
         </p>
 
         {/* Action Buttons & Socials */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-5 pt-1 reveal-child reveal-delay-3">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 pt-1 reveal-child reveal-delay-3">
           <Button
             href="#projects"
+            className="w-full sm:w-auto sm:min-w-[190px]"
             iconRight={<ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
           >
             View Projects
           </Button>
           <Button
-            href="mailto:neillugue20@gmail.com"
-            iconLeft={<Mail size={14} />}
+            href={resumePdf}
+            download="Neil_Adrian_Lugue_Resume.pdf"
+            target="_blank"
+            className="w-full sm:w-auto sm:min-w-[190px]"
+            iconLeft={<Download size={14} className="text-[#FFD54F]" />}
           >
-            Contact Me
+            Download Resume
           </Button>
         </div>
 

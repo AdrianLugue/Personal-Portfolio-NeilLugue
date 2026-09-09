@@ -4,10 +4,12 @@ import Navbar from './components/Navbar';
 import ShaderBackground from './components/ShaderBackground';
 import Hero from './components/Hero';
 import About from './components/About';
+import Certifications from './components/Certifications';
 import TechStack from './components/TechStack';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
+import ChatAssistant from './components/chat/ChatAssistant';
 
 const ProjectExplorer = lazy(() => import('./components/ProjectExplorer'));
 
@@ -80,9 +82,9 @@ function HomePage() {
           <About />
         </section>
 
-        {/* ── Seamless Lower Atmosphere: Projects to Contact ── */}
+        {/* ── Seamless Lower Atmosphere: Certifications -> Projects -> Contact ── */}
         <div className="relative w-full overflow-hidden">
-          {/* Bottom Shader Background spanning Projects & Contact seamlessly */}
+          {/* Bottom Shader Background spanning Certifications, Projects & Contact seamlessly */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             <ShaderBackground />
             {/* Smooth gradient fade-in from About Me's pure black */}
@@ -97,12 +99,17 @@ function HomePage() {
             />
           </div>
 
-          {/* Section 04: Projects Carousel Section */}
+          {/* Section 04: Certifications & Credentials Section */}
+          <section id="certifications" className="relative z-10 min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start px-3 sm:px-8 lg:px-12 pt-20 sm:pt-22 lg:pt-24 pb-12 sm:pb-16 lg:pb-6 overflow-visible lg:overflow-hidden">
+            <Certifications />
+          </section>
+
+          {/* Section 05: Projects Carousel Section */}
           <section id="projects" className="relative z-10 min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start px-2 sm:px-6 lg:px-10 pt-20 sm:pt-22 lg:pt-24 pb-12 sm:pb-16 lg:pb-6 overflow-visible lg:overflow-hidden">
             <Projects />
           </section>
 
-          {/* Section 05: Contact Section */}
+          {/* Section 06: Contact Section */}
           <section id="contact" className="relative z-10 min-h-screen h-auto lg:h-[100dvh] flex flex-col justify-start px-3 sm:px-8 lg:px-12 pt-20 sm:pt-22 lg:pt-24 pb-16 sm:pb-20 lg:pb-6 overflow-visible lg:overflow-hidden">
             <Contact />
           </section>
@@ -142,6 +149,9 @@ export default function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {/* ── Global AI Portfolio Assistant (all routes) ── */}
+      <ChatAssistant />
     </SmoothScrollProvider>
   );
 }

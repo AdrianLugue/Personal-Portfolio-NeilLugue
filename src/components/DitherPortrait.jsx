@@ -115,7 +115,11 @@ export default function DitherPortrait({ className = '', style = {} }) {
 
     targetX.current = Math.max(0, Math.min(100, x));
     targetY.current = Math.max(0, Math.min(100, y));
-    targetRadius.current = 145;
+
+    // Dynamic responsive radius: smaller on mobile devices & compact containers
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const maxRadius = isMobile ? 80 : 145;
+    targetRadius.current = Math.min(maxRadius, Math.max(50, rect.width * 0.32));
   };
 
   /* Mouse Event Handlers */
@@ -169,7 +173,7 @@ export default function DitherPortrait({ className = '', style = {} }) {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`relative group flex justify-center items-center select-none cursor-crosshair touch-none ${className}`}
+      className={`relative group flex justify-center items-center select-none cursor-crosshair touch-pan-y ${className}`}
       style={{
         width: '100%',
         aspectRatio: '499/750',
