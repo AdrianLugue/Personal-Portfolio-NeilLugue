@@ -23,6 +23,7 @@ import {
   ArrowRight,
   ArrowLeft,
   ArrowUpRight,
+  Gamepad2,
   PanelLeftClose,
   PanelLeftOpen,
 } from 'lucide-react';
@@ -611,11 +612,11 @@ export default function ProjectExplorer() {
                   </p>
                 </div>
 
-                {/* Problem & Solution Overview */}
+                {/* Project Overview */}
                 {selectedProject.description && (
                   <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
                     <span className="text-[11px] font-mono uppercase tracking-wider text-[#FFD54F] font-semibold">
-                      // Problem & Solution
+                      // Project Overview
                     </span>
                     <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
                       {selectedProject.description}
@@ -734,9 +735,10 @@ export default function ProjectExplorer() {
                       rel="noopener noreferrer"
                       size="sm"
                       className="w-full sm:w-auto sm:min-w-[200px]"
+                      iconLeft={selectedProject.liveLabel?.toLowerCase().includes('play') ? <Gamepad2 size={14} className="text-[#FFD54F]" /> : null}
                       iconRight={<ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
                     >
-                      Launch Live Platform
+                      {selectedProject.liveLabel || 'Launch Live Platform'}
                     </Button>
                   )}
 

@@ -19,6 +19,7 @@ import {
   SiFigma,
   SiZoho,
   SiDocker,
+  SiUnity,
 } from 'react-icons/si';
 import { FaJava } from 'react-icons/fa';
 import { TbBrandCSharp, TbBrandReactNative, TbApi } from 'react-icons/tb';
@@ -34,6 +35,7 @@ export default function TechStack() {
   const marqueeRow1 = [
     { name: 'JavaScript', category: 'Language', icon: <SiJavascript className="text-[#F7DF1E]" size={28} /> },
     { name: 'React', category: 'Frontend', icon: <SiReact className="text-[#61DAFB]" size={28} /> },
+    { name: 'Unity', category: 'Game Engine', icon: <SiUnity className="text-white" size={28} /> },
     { name: 'Node.js', category: 'Backend', icon: <SiNodedotjs className="text-[#339933]" size={28} /> },
     { name: 'Python', category: 'Language', icon: <SiPython className="text-[#3776AB]" size={28} /> },
     { name: 'PostgreSQL', category: 'Database', icon: <SiPostgresql className="text-[#4169E1]" size={28} /> },
@@ -43,7 +45,6 @@ export default function TechStack() {
     { name: 'REST APIs', category: 'Backend', icon: <TbApi className="text-[#C6B99B]" size={28} /> },
     { name: 'Git', category: 'Tooling', icon: <SiGit className="text-[#F05032]" size={28} /> },
     { name: 'Android Studio', category: 'Mobile IDE', icon: <SiAndroidstudio className="text-[#3DDC84]" size={28} /> },
-    { name: 'PHP', category: 'Language', icon: <SiPhp className="text-[#777BB4]" size={28} /> },
   ];
 
   // Row 2 for Marquee: 12 Technologies (sliding right)
@@ -55,10 +56,10 @@ export default function TechStack() {
     { name: 'GitHub', category: 'Collaboration', icon: <SiGithub className="text-white" size={28} /> },
     { name: 'HTML5', category: 'Frontend', icon: <SiHtml5 className="text-[#E34F26]" size={28} /> },
     { name: 'CSS3', category: 'Frontend', icon: <SiCss className="text-[#1572B6]" size={28} /> },
+    { name: 'PHP', category: 'Language', icon: <SiPhp className="text-[#777BB4]" size={28} /> },
     { name: 'Firebase', category: 'Cloud BaaS', icon: <SiFirebase className="text-[#FFCA28]" size={28} /> },
     { name: 'VS Code', category: 'Editor', icon: <VscVscode className="text-[#007ACC]" size={28} /> },
     { name: 'Figma', category: 'UI/UX Design', icon: <SiFigma className="text-[#F24E1E]" size={28} /> },
-    { name: 'Google App Scripts', category: 'Automation', icon: <SiGoogle className="text-[#4285F4]" size={28} /> },
     { name: 'Zoho Inventory', category: 'ERP & Ops', icon: <SiZoho className="text-[#D32F2F]" size={28} /> },
   ];
 
@@ -101,6 +102,7 @@ export default function TechStack() {
     {
       title: 'Tools & Platforms',
       skills: [
+        { name: 'Unity', icon: <SiUnity className="text-white" size={20} /> },
         { name: 'Docker', icon: <SiDocker className="text-[#2496ED]" size={20} /> },
         { name: 'Git', icon: <SiGit className="text-[#F05032]" size={20} /> },
         { name: 'GitHub', icon: <SiGithub className="text-white" size={20} /> },

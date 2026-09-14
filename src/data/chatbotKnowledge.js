@@ -8,14 +8,14 @@ export const KNOWLEDGE_BASE = {
   bio: {
     name: 'Neil Adrian Lugue',
     shortName: 'Neil',
-    title: 'Full-Stack Developer · AI & Web Apps',
+    title: 'Full-Stack Developer · Aspiring AI Engineer',
     education: 'Bachelor of Science in Information Technology at Bulacan State University (BulSU)',
     location: 'Philippines',
     email: 'neillugue20@gmail.com',
     linkedin: 'https://www.linkedin.com/in/neil-adrian-j-lugue-6b63b4375/',
     github: 'https://github.com/AdrianLugue',
     summary:
-      'Neil is a full-stack developer and AI engineer who builds production-grade mobile apps, web platforms, and AI-powered tools. He is comfortable across React Native, Python, React, Node.js, Django, and PostgreSQL. His capstone project — SakloLaw — is an institutional AI legal aid assistant turned over to Bulacan State University.',
+      'Neil is a full-stack developer and aspiring AI engineer who builds production-grade mobile apps, web platforms, and AI-assisted tools. He is comfortable across React Native, Python, React, Django, Node.js, and PostgreSQL. His capstone project — SakloLaw — is an institutional AI legal aid assistant turned over to Bulacan State University.',
     availability:
       'Neil is currently open to full-time opportunities, part-time roles, and freelance project collaborations in the Philippines or remote.',
   },
@@ -24,8 +24,9 @@ export const KNOWLEDGE_BASE = {
     frontend: ['React', 'React Native', 'Next.js', 'Vite', 'TypeScript', 'JavaScript (ES6+)', 'Tailwind CSS', 'WebGL / GLSL Shaders'],
     backend: ['Python', 'Django', 'Node.js', 'REST APIs'],
     databases: ['PostgreSQL', 'SQLite', 'Supabase', 'Neon', 'FAISS Vector DB', 'Drizzle ORM'],
+    gameDev: ['Unity (2D)', 'C#', 'Finite State Machines (FSM)', 'Tilemaps & 2D Physics', 'Cinemachine'],
     ai: ['OpenAI GPT-4', 'Groq SDK', 'DeepSeek R1', 'BGE-M3 Embeddings', 'RAG Pipelines', 'LLM Integration'],
-    tools: ['GitHub', 'Figma', 'Vercel', 'Vite', 'React Router', 'Selenium'],
+    tools: ['Unity', 'GitHub', 'Figma', 'Vercel', 'Vite', 'React Router', 'Selenium', 'Android Studio'],
   },
 
   projects: [
@@ -72,6 +73,20 @@ export const KNOWLEDGE_BASE = {
       live: null,
       sectionId: 'projects',
     },
+    {
+      id: 'chromara',
+      title: 'Spirits of Chromara',
+      year: '2024',
+      category: '2D Action Puzzle-Platformer · Unity & C#',
+      role: 'Gameplay Programmer & Level Designer',
+      tags: ['spirits of chromara', 'chromara', 'spectrum', 'game', 'unity', 'c#', 'gamedev', 'fsm', 'ai', 'platformer', 'chromavore', 'lumi'],
+      summary:
+        'A 2D educational action puzzle-platformer made in Unity (C#). Features color-theory absorption & mixing mechanics, Finite State Machine (FSM) enemy AI (Hue Hounds & Chromavore boss), custom tilemap hazard levels, and 2D sprite artwork. Built for Android & Windows.',
+      techStack: ['Unity Engine (2D)', 'C#', 'Finite State Machines (FSM)', 'Tilemaps', 'Unity 2D Physics', 'Cinemachine'],
+      github: null,
+      live: 'https://adrianlugue.github.io/Spirits-Of-Chromara-WebGL/',
+      sectionId: 'projects',
+    },
   ],
   certifications: [
     {
@@ -100,11 +115,11 @@ export const QUICK_CHIPS = [
 // ── Intent Keyword Map → Knowledge Handler ─────────────────────────────────
 export const INTENT_MAP = [
   {
-    keywords: ['project', 'projects', 'work', 'built', 'portfolio', 'applications', 'saklolaw', 'quizeasy'],
+    keywords: ['project', 'projects', 'work', 'built', 'portfolio', 'applications', 'saklolaw', 'quizeasy', 'spirits of chromara', 'chromara', 'spectrum', 'game', 'unity', 'game dev', 'gamedev'],
     handler: 'projects',
   },
   {
-    keywords: ['tech stack', 'technology', 'stack', 'skills', 'programming language', 'framework', 'databases', 'frontend', 'backend'],
+    keywords: ['tech stack', 'technology', 'stack', 'skills', 'programming language', 'framework', 'databases', 'frontend', 'backend', 'unity', 'c#'],
     handler: 'techstack',
   },
   {

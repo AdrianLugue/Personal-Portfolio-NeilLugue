@@ -13,7 +13,7 @@ import pythonCertPdf from '../assets/Python_Certificate.pdf';
 
 // ── System Prompt for Gemini ────────────────────────────────────────────────
 const buildSystemPrompt = () => `
-You are the AI Portfolio Assistant for Neil Adrian Lugue, a full-stack developer and AI engineer based in the Philippines.
+You are the AI Portfolio Assistant for Neil Adrian Lugue, a full-stack developer and aspiring AI engineer based in the Philippines.
 
 YOUR ROLE:
 - Answer questions STRICTLY about Neil's skills, education, certifications, projects, background, and contact details.
@@ -108,15 +108,20 @@ function handleProjects() {
       { type: 'scroll', label: 'View All Projects', sectionId: 'projects' },
       ...projects
         .filter((p) => p.live)
-        .map((p) => ({ type: 'url', label: `Live: ${p.title.split(':')[0]}`, url: p.live })),
+        .map((p) => ({
+          type: 'url',
+          label: p.title.includes('Chromara') ? 'Play: Spirits of Chromara' : `Live: ${p.title.split(':')[0]}`,
+          url: p.live,
+        })),
     ],
   };
 }
 
 function handleTechStack() {
   const s = KNOWLEDGE_BASE.skills;
+  const gameDevText = s.gameDev ? `\n• **Game Development**: ${s.gameDev.join(', ')}` : '';
   return {
-    text: `Neil's core tech stack spans:\n\n• **Frontend**: ${s.frontend.join(', ')}\n• **Backend**: ${s.backend.join(', ')}\n• **Databases**: ${s.databases.join(', ')}\n• **AI/ML & RAG**: ${s.ai.join(', ')}\n• **Tools & Platforms**: ${s.tools.join(', ')}`,
+    text: `Neil's core tech stack spans:\n\n• **Frontend**: ${s.frontend.join(', ')}\n• **Backend**: ${s.backend.join(', ')}\n• **Databases**: ${s.databases.join(', ')}${gameDevText}\n• **AI/ML & RAG**: ${s.ai.join(', ')}\n• **Tools & Platforms**: ${s.tools.join(', ')}`,
     actions: [{ type: 'scroll', label: 'Explore Tech Stack', sectionId: 'tech-stack' }],
   };
 }

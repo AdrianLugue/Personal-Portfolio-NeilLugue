@@ -1,6 +1,9 @@
 import sakloLawMockup from '../assets/SakloLaw_Mockup.png';
 import quizEasyMockup from '../assets/QuizEasy_Mockup.png';
 import portfolioMockup from '../assets/Portfolio_Mockup.png';
+import socMockup from '../assets/Spirits Of Chromara_Mockup.png';
+import socScreenshot1 from '../assets/SoC_ss1.png';
+import socScreenshot2 from '../assets/SoC_ss2.png';
 
 export const PROJECTS_DATA = [
   {
@@ -157,5 +160,83 @@ export const PROJECTS_DATA = [
 
     ],
     accentColor: '#C6B99B',
+  },
+  {
+    id: '04',
+    title: 'Spirits of Chromara',
+    category: '2D Action Puzzle-Platformer · Unity & C#',
+    tag: 'Unity 2D Game',
+    year: '2024',
+    role: 'Gameplay Programmer & Level Designer',
+    organization: 'Bulacan State University (CICT)',
+    tagline: 'A color-theory puzzle-platformer where players absorb, mix, and weaponize complementary hues to defeat the Chromavore and restore color to Chromara.',
+    description:
+      'Developed in Unity as a collaborative mobile and PC game development project, Spirits of Chromara blends fast-paced 2D platforming with color-theory puzzle mechanics. As a core programmer and level designer, I architected the player movement & combat controllers, developed Finite State Machine (FSM) enemy AI behaviors (including Hue Hounds and the multi-phase Chromavore boss), designed hazard-filled tilemap levels, and illustrated 50% of the in-game 2D sprites.',
+    mockupImage: socMockup,
+    deviceType: 'desktop',
+    isTurnedOver: false,
+    liveUrl: 'https://adrianlugue.github.io/Spirits-Of-Chromara-WebGL/',
+    liveLabel: 'Play WebGL Demo',
+    githubUrl: null, // Private academic repository
+    media: [
+      {
+        id: 'soc-mockup-overview',
+        type: 'image',
+        title: 'Spirits of Chromara — 3-Device Showcase',
+        url: socMockup,
+        caption: 'Title banner and multi-screen showcase illustrating Lumi, pixel-art level environments, and color spirit mechanics.',
+      },
+      {
+        id: 'soc-gameplay-video',
+        type: 'video',
+        title: 'Gameplay Walkthrough & Mechanics Demo',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/uofcjx0MAHM',
+        caption: 'Full gameplay demonstration showcasing player physics, color absorption, puzzle sequences, and combat against Hue Hounds.',
+      },
+      {
+        id: 'soc-lore-video',
+        type: 'video',
+        title: 'Cinematic Lore & Story Trailer',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/e7IQEWvOAMg',
+        caption: 'Story trailer detailing the invasion of the Chromavore and Lumi\'s quest to restore color to Chromara.',
+      },
+      {
+        id: 'soc-forest-combat',
+        type: 'image',
+        title: 'Forest Level — Complementary Combat & Slime Barriers',
+        url: socScreenshot1,
+        caption: 'In-game demonstration of Lumi in Green form attacking a Red Slime Barrier with complementary projectile attacks.',
+      },
+      {
+        id: 'soc-cave-patrol',
+        type: 'image',
+        title: 'Cave Level — Vertical Navigation & Hue Hound AI Patrol',
+        url: socScreenshot2,
+        caption: 'Multi-tiered cave tilemap showcasing vertical platforming, spirit collection, and active Hue Hound enemy patrol AI.',
+      },
+    ],
+    techStack: [
+      'Unity Engine (2D)',
+      'C#',
+      'Finite State Machines (FSM)',
+      'Tilemaps & Grid System',
+      'Unity 2D Physics',
+      'Cinemachine',
+      '2D Sprite Animation',
+      'Android (APK) & Windows (.exe)',
+    ],
+    highlights: [
+      'Architected core player movement physics and control systems handling jumping, absorption triggers, projectile attacks, and color neutralization.',
+      'Engineered Finite State Machine (FSM) enemy AI for Hue Hounds (patrol, aggro pursuit, nullification, complementary weakness) and the multi-phase Chromavore boss with dynamic color-shifting routines.',
+      'Designed full level layouts with environmental hazards (Blaze Trails, Frostbite Trails, and color-coded exit portals) requiring tactical color mixing to navigate.',
+      'Created and animated 50% of in-game 2D sprite art, character animation controllers, and environmental props.',
+      'Collaborated in a multidisciplinary team to optimize gameplay performance for both Windows PC and Android mobile builds.',
+    ],
+    stats: [
+      { label: 'Engine', value: 'Unity (C#)' },
+      { label: 'Platforms', value: 'Android & Windows' },
+      { label: 'Core AI', value: 'Finite State Machines' },
+    ],
+    accentColor: '#fffeffff',
   },
 ];
