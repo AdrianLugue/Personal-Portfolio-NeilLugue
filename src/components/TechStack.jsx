@@ -35,7 +35,7 @@ export default function TechStack() {
   const marqueeRow1 = [
     { name: 'JavaScript', category: 'Language', icon: <SiJavascript className="text-[#F7DF1E]" size={28} /> },
     { name: 'React', category: 'Frontend', icon: <SiReact className="text-[#61DAFB]" size={28} /> },
-    { name: 'Unity', category: 'Game Engine', icon: <SiUnity className="text-white" size={28} /> },
+    { name: 'Unity', category: 'Game Engine', icon: <SiUnity className="text-[#0A0907] dark:text-white" size={28} /> },
     { name: 'Node.js', category: 'Backend', icon: <SiNodedotjs className="text-[#339933]" size={28} /> },
     { name: 'Python', category: 'Language', icon: <SiPython className="text-[#3776AB]" size={28} /> },
     { name: 'PostgreSQL', category: 'Database', icon: <SiPostgresql className="text-[#4169E1]" size={28} /> },
@@ -53,7 +53,7 @@ export default function TechStack() {
     { name: 'C++', category: 'Language', icon: <SiCplusplus className="text-[#00599C]" size={28} /> },
     { name: 'MySQL', category: 'Database', icon: <SiMysql className="text-[#4479A1]" size={28} /> },
     { name: 'C#', category: 'Language', icon: <TbBrandCSharp className="text-[#9B4F96]" size={28} /> },
-    { name: 'GitHub', category: 'Collaboration', icon: <SiGithub className="text-white" size={28} /> },
+    { name: 'GitHub', category: 'Collaboration', icon: <SiGithub className="text-[#0A0907] dark:text-white" size={28} /> },
     { name: 'HTML5', category: 'Frontend', icon: <SiHtml5 className="text-[#E34F26]" size={28} /> },
     { name: 'CSS3', category: 'Frontend', icon: <SiCss className="text-[#1572B6]" size={28} /> },
     { name: 'PHP', category: 'Language', icon: <SiPhp className="text-[#777BB4]" size={28} /> },
@@ -102,10 +102,10 @@ export default function TechStack() {
     {
       title: 'Tools & Platforms',
       skills: [
-        { name: 'Unity', icon: <SiUnity className="text-white" size={20} /> },
+        { name: 'Unity', icon: <SiUnity className="text-[#0A0907] dark:text-white" size={20} /> },
         { name: 'Docker', icon: <SiDocker className="text-[#2496ED]" size={20} /> },
         { name: 'Git', icon: <SiGit className="text-[#F05032]" size={20} /> },
-        { name: 'GitHub', icon: <SiGithub className="text-white" size={20} /> },
+        { name: 'GitHub', icon: <SiGithub className="text-[#0A0907] dark:text-white" size={20} /> },
         { name: 'VS Code', icon: <VscVscode className="text-[#007ACC]" size={20} /> },
         { name: 'Android Studio', icon: <SiAndroidstudio className="text-[#3DDC84]" size={20} /> },
         { name: 'Figma', icon: <SiFigma className="text-[#F24E1E]" size={20} /> },
@@ -125,7 +125,7 @@ export default function TechStack() {
       {/* Section Header with View Mode Toggle */}
       <div className="flex flex-col items-center text-center mb-3 sm:mb-4 lg:mb-5 px-4 sm:px-6 shrink-0">
         <div className="reveal-mask">
-          <h2 className="reveal-title font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-[0.03em]">
+          <h2 className="reveal-title font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-[0.03em]" style={{ color: 'var(--text-primary)' }}>
             Tech <span className="text-gold-gradient">Stack</span>
           </h2>
         </div>
@@ -137,8 +137,9 @@ export default function TechStack() {
             onClick={() => setViewMode('marquee')}
             className={`flex items-center justify-center min-w-[135px] sm:min-w-[155px] gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-montserrat font-medium transition-all duration-200 cursor-pointer ${viewMode === 'marquee'
               ? 'bg-[#7F7255] text-white shadow-lg shadow-[#7F7255]/40 ring-1 ring-white/60'
-              : 'text-[#A3A3A3] hover:text-white hover:bg-white/5'
+              : 'hover:bg-white/5'
               }`}
+            style={viewMode !== 'marquee' ? { color: 'var(--text-muted)' } : {}}
           >
             <Repeat size={13} className={viewMode === 'marquee' ? 'animate-spin-slow' : ''} />
             Marquee View
@@ -147,8 +148,9 @@ export default function TechStack() {
             onClick={() => setViewMode('rows')}
             className={`flex items-center justify-center min-w-[135px] sm:min-w-[155px] gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-montserrat font-medium transition-all duration-200 cursor-pointer ${viewMode === 'rows'
               ? 'bg-[#7F7255] text-white shadow-lg shadow-[#7F7255]/40 ring-1 ring-white/60'
-              : 'text-[#A3A3A3] hover:text-white hover:bg-white/5'
+              : 'hover:bg-white/5'
               }`}
+            style={viewMode !== 'rows' ? { color: 'var(--text-muted)' } : {}}
           >
             <LayoutGrid size={13} />
             Categorized Rows
@@ -194,14 +196,14 @@ export default function TechStack() {
                   key={`r1-${idx}`}
                   className="px-4 py-2.5 sm:px-5 sm:py-3.5 rounded-2xl halftone-pill flex items-center gap-3 sm:gap-4 shrink-0 group/pill cursor-default"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center shrink-0 group-hover/pill:border-[#FFD54F]/40 group-hover/pill:scale-110 transition-all duration-200">
+                  <div className="w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 group-hover/pill:border-[#FFD54F]/40 group-hover/pill:scale-110 transition-all duration-200" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--input-border)' }}>
                     {item.icon}
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="font-montserrat font-semibold text-sm sm:text-base text-white group-hover/pill:text-[#FFD54F] transition-colors whitespace-nowrap">
+                    <span className="font-montserrat font-semibold text-sm sm:text-base group-hover/pill:transition-colors whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
                       {item.name}
                     </span>
-                    <span className="text-[10px] text-[#A39B8B] font-mono uppercase tracking-wider">
+                    <span className="text-[10px] font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                       {item.category}
                     </span>
                   </div>
@@ -216,14 +218,14 @@ export default function TechStack() {
                   key={`r2-${idx}`}
                   className="px-5 py-3.5 rounded-2xl halftone-pill flex items-center gap-4 shrink-0 group/pill cursor-default"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center shrink-0 group-hover/pill:border-[#FFD54F]/40 group-hover/pill:scale-110 transition-all duration-200">
+                  <div className="w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 group-hover/pill:border-[#FFD54F]/40 group-hover/pill:scale-110 transition-all duration-200" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--input-border)' }}>
                     {item.icon}
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="font-montserrat font-semibold text-sm sm:text-base text-white group-hover/pill:text-[#FFD54F] transition-colors whitespace-nowrap">
+                    <span className="font-montserrat font-semibold text-sm sm:text-base group-hover/pill:transition-colors whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
                       {item.name}
                     </span>
-                    <span className="text-[10px] text-[#A39B8B] font-mono uppercase tracking-wider">
+                    <span className="text-[10px] font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                       {item.category}
                     </span>
                   </div>
@@ -242,8 +244,8 @@ export default function TechStack() {
                 className="halftone-card rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center gap-3 sm:gap-6 group"
               >
                 {/* Category Label on Left */}
-                <div className="md:w-52 shrink-0 flex items-center gap-2.5 pb-2 md:pb-0 border-b md:border-b-0 md:border-r border-white/10">
-                  <span className="font-montserrat font-bold text-sm sm:text-base text-white group-hover:text-[#FFD54F] transition-colors whitespace-nowrap">
+                <div className="md:w-52 shrink-0 flex items-center gap-2.5 pb-2 md:pb-0 border-b md:border-b-0 md:border-r" style={{ borderColor: 'var(--border-card)' }}>
+                  <span className="font-montserrat font-bold text-sm sm:text-base group-hover:transition-colors whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
                     {cat.title}
                   </span>
                 </div>
@@ -258,7 +260,7 @@ export default function TechStack() {
                       <div className="w-5 h-5 flex items-center justify-center shrink-0 group-hover/item:scale-110 transition-transform">
                         {skill.icon}
                       </div>
-                      <span className="font-montserrat font-medium text-xs sm:text-[13px] text-neutral-200 group-hover/item:text-white transition-colors">
+                      <span className="font-montserrat font-medium text-xs sm:text-[13px] group-hover/item:transition-colors" style={{ color: 'var(--text-primary)' }}>
                         {skill.name}
                       </span>
                     </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, Component } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Dithering } from '@paper-design/shaders-react';
-import { Menu, X, Download } from 'lucide-react';
+import { Menu, X, Download, Sun, Moon } from 'lucide-react';
 import DitherCascadeText from './DitherCascadeText';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
+import { useTheme } from '../context/ThemeContext';
 import resumePdf from '../assets/Resume.pdf';
 
 class ShaderBoundary extends Component {
@@ -24,6 +25,8 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { scrollTo } = useSmoothScroll();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -134,9 +137,13 @@ export default function Navbar() {
       <div
         className={`pointer-events-auto w-full rounded-2xl sm:rounded-full transition-all duration-300 flex items-center justify-between border ${
           scrolled
-            ? 'bg-black/85 backdrop-blur-xl border-[#C6B99B]/35 shadow-[0_12px_36px_rgba(0,0,0,0.9)] py-2 sm:py-2.5 px-4 sm:px-6'
-            : 'bg-black/70 backdrop-blur-lg border-white/10 shadow-[0_8px_25px_rgba(0,0,0,0.6)] py-2.5 sm:py-3 px-4 sm:px-7'
+            ? 'backdrop-blur-xl shadow-[0_12px_36px_rgba(0,0,0,0.4)] py-2 sm:py-2.5 px-4 sm:px-6'
+            : 'backdrop-blur-lg shadow-[0_8px_25px_rgba(0,0,0,0.2)] py-2.5 sm:py-3 px-4 sm:px-7'
         }`}
+        style={{
+          backgroundColor: scrolled ? (isDark ? 'rgba(0,0,0,0.85)' : 'rgba(244,241,235,0.92)') : (isDark ? 'rgba(0,0,0,0.70)' : 'rgba(244,241,235,0.80)'),
+          borderColor: scrolled ? (isDark ? 'rgba(198,185,155,0.35)' : 'rgba(138,115,85,0.35)') : (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(138,115,85,0.15)'),
+        }}
       >
         {/* ── LEFT: Brand with Dither Glyph Cascade ── */}
         <div className="flex items-center gap-3 sm:gap-4 lg:gap-6">
@@ -157,7 +164,7 @@ export default function Navbar() {
         </div>
 
         {/* ── CENTER: Interactive Nav Links with Dither Shimmer Aura ── */}
-        <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-white/[0.02] border border-white/5 backdrop-blur-md">
+        <nav className={`hidden md:flex items-center gap-1.5 p-1 rounded-full border backdrop-blur-md ${isDark ? 'bg-white/[0.03] border-white/10' : 'bg-[#E5DFD2] border-[rgba(100,75,35,0.25)]'}`}>
           {navLinks.map((link) => {
             const isActive = isProjectsRoute
               ? link.sectionId === 'projects'
@@ -171,10 +178,10 @@ export default function Navbar() {
                 onClick={(e) => handleLinkClick(e, link)}
                 onMouseEnter={() => setHoveredNav(link.sectionId)}
                 onMouseLeave={() => setHoveredNav(null)}
-                className={`relative px-4 py-1.5 rounded-full font-montserrat font-semibold text-xs tracking-wider uppercase transition-all duration-200 cursor-pointer select-none flex items-center gap-1.5 overflow-hidden group ${
+                className={`relative px-4 py-1.5 rounded-full font-montserrat font-bold text-xs tracking-wider uppercase transition-all duration-200 cursor-pointer select-none flex items-center gap-1.5 overflow-hidden group ${
                   isActive
-                    ? 'text-[#FFD54F]'
-                    : 'text-neutral-300 hover:text-white'
+                    ? isDark ? 'text-[#FFD54F]' : 'text-[#805D15]'
+                    : isDark ? 'text-neutral-200 hover:text-white' : 'text-[#24201A] hover:text-[#805D15]'
                 }`}
               >
                 {/* Dynamic WebGL Paper Dithering Shimmer on Hover/Active */}
@@ -188,7 +195,7 @@ export default function Navbar() {
                         size={1.8}
                         scale={0.5}
                         colorBack="#00000000"
-                        colorFront={isActive ? '#FFD54F' : '#C6B99B'}
+                        colorFront={isActive ? (isDark ? '#FFD54F' : '#9E6E00') : (isDark ? '#C6B99B' : '#805D15')}
                         className="w-full h-full object-cover"
                       />
                     </ShaderBoundary>
@@ -199,9 +206,13 @@ export default function Navbar() {
                 <div
                   className={`absolute inset-0 rounded-full transition-all duration-200 ${
                     isActive
-                      ? 'bg-white/[0.08] border border-[#FFD54F]/40 shadow-[0_0_15px_rgba(255,213,79,0.2)]'
+                      ? isDark
+                        ? 'bg-white/[0.08] border border-[#FFD54F]/40 shadow-[0_0_15px_rgba(255,213,79,0.2)]'
+                        : 'bg-[#FAF8F4] border border-[rgba(128,93,21,0.40)] shadow-sm'
                       : isHovered
-                      ? 'bg-white/[0.04] border border-white/10'
+                      ? isDark
+                        ? 'bg-white/[0.04] border border-white/10'
+                        : 'bg-black/[0.05] border border-[rgba(100,75,35,0.15)]'
                       : 'border border-transparent'
                   }`}
                 />
@@ -212,17 +223,34 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* ── RIGHT: Resume / CV Download Button ── */}
-        <div className="hidden md:flex items-center min-w-[110px] justify-end">
+        {/* ── RIGHT: Theme Toggle + Resume / CV Download Button ── */}
+        <div className="hidden md:flex items-center gap-2 min-w-[150px] justify-end">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className={`group relative p-2 rounded-full border transition-all duration-200 cursor-pointer shadow-sm ${
+              isDark
+                ? 'bg-white/[0.06] hover:bg-white/[0.12] border-white/15 hover:border-[#FFD54F]/60 text-[#FFD54F]'
+                : 'bg-[#FAF8F4] hover:bg-[#E5DFD2] border-[rgba(100,75,35,0.35)] hover:border-[#805D15] text-[#805D15]'
+            }`}
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {isDark ? <Sun size={15} className="text-[#FFD54F]" /> : <Moon size={15} className="text-[#805D15]" />}
+          </button>
           <a
             href={resumePdf}
             download="Neil_Adrian_Lugue_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-[#FFD54F] border border-white/10 hover:border-[#FFD54F] text-neutral-300 hover:text-black font-montserrat font-semibold text-xs tracking-wider uppercase transition-all duration-200 shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className={`group relative px-3.5 py-1.5 rounded-full border font-montserrat font-bold text-xs tracking-wider uppercase transition-all duration-200 shadow-sm flex items-center gap-1.5 cursor-pointer ${
+              isDark
+                ? 'bg-white/[0.06] hover:bg-[#FFD54F] border-white/15 hover:border-[#FFD54F] text-white hover:text-black'
+                : 'bg-[#FAF8F4] hover:bg-[#805D15] border-[rgba(100,75,35,0.35)] hover:border-[#805D15] text-[#0A0907] hover:text-white'
+            }`}
             title="Download Resume"
           >
-            <Download size={13} className="text-[#FFD54F] group-hover:text-black transition-colors" />
+            <Download size={13} className={`transition-colors ${isDark ? 'text-[#FFD54F] group-hover:text-black' : 'text-[#805D15] group-hover:text-white'}`} />
             <span>Resume</span>
           </a>
         </div>
@@ -230,7 +258,11 @@ export default function Navbar() {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-white p-1.5 rounded-xl bg-white/[0.05] border border-white/10 focus:outline-none hover:text-[#FFD54F] transition-colors"
+          className={`md:hidden p-1.5 rounded-xl border focus:outline-none transition-colors shadow-sm ${
+            isDark
+              ? 'text-white bg-white/[0.06] border-white/15 hover:text-[#FFD54F]'
+              : 'text-[#0A0907] bg-[#FAF8F4] border-[rgba(100,75,35,0.3)] hover:text-[#805D15]'
+          }`}
           aria-label="Toggle navigation menu"
         >
           {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -239,18 +271,41 @@ export default function Navbar() {
 
       {/* ── MOBILE EXPANDED DRAWER ── */}
       {mobileMenuOpen && (
-        <div className="pointer-events-auto md:hidden mt-2 rounded-2xl bg-black/95 backdrop-blur-2xl border border-white/10 p-5 shadow-2xl transition-all duration-300 animate-fadeIn">
+        <div
+          className="pointer-events-auto md:hidden mt-2 rounded-2xl backdrop-blur-2xl border p-5 shadow-2xl transition-all duration-300 animate-fadeIn"
+          style={{
+            backgroundColor: isDark ? 'rgba(0,0,0,0.95)' : 'rgba(244,241,235,0.97)',
+            borderColor: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(138,115,85,0.20)',
+          }}
+        >
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleLinkClick(e, link)}
-                className="flex items-center justify-between py-2 px-3 rounded-xl bg-white/[0.02] border border-white/5 text-white hover:text-[#FFD54F] hover:bg-white/[0.06] font-montserrat font-semibold text-sm tracking-wider uppercase transition-all"
+                className={`flex items-center justify-between py-2 px-3 rounded-xl border font-montserrat font-semibold text-sm tracking-wider uppercase transition-all ${
+                  isDark
+                    ? 'bg-white/[0.02] border-white/5 text-white hover:text-[#FFD54F] hover:bg-white/[0.06]'
+                    : 'bg-black/[0.02] border-black/5 text-neutral-800 hover:text-[#C8930A] hover:bg-black/[0.05]'
+                }`}
               >
                 <span>{link.name}</span>
               </a>
             ))}
+
+            {/* Mobile Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className={`flex items-center gap-2 py-2.5 px-3 rounded-xl border font-montserrat font-bold text-xs tracking-wider uppercase transition-all ${
+                isDark
+                  ? 'bg-white/[0.03] border-white/10 text-neutral-300 hover:text-[#FFD54F]'
+                  : 'bg-black/[0.03] border-black/10 text-neutral-600 hover:text-[#C8930A]'
+              }`}
+            >
+              {isDark ? <Sun size={15} /> : <Moon size={15} />}
+              <span>{isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</span>
+            </button>
 
             {/* Mobile Resume Download Button */}
             <a
@@ -258,7 +313,11 @@ export default function Navbar() {
               download="Neil_Adrian_Lugue_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-[#FFD54F]/10 border border-[#FFD54F]/30 text-[#FFD54F] font-montserrat font-bold text-xs tracking-wider uppercase transition-all mt-1"
+              className={`flex items-center justify-between py-2.5 px-3 rounded-xl border font-montserrat font-bold text-xs tracking-wider uppercase transition-all mt-1 ${
+                isDark
+                  ? 'bg-[#FFD54F]/10 border-[#FFD54F]/30 text-[#FFD54F]'
+                  : 'bg-[#C8930A]/10 border-[#C8930A]/30 text-[#C8930A]'
+              }`}
             >
               <div className="flex items-center gap-2">
                 <Download size={15} />

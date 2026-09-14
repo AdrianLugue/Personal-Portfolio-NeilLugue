@@ -231,7 +231,8 @@ export default function DitherPortrait({ className = '', style = {} }) {
         <img
           src="/assets/portrait_cutout.png"
           alt="Neil Lugue"
-          className="w-full h-full object-contain object-center pointer-events-none select-none drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
+          className="w-full h-full object-contain object-center pointer-events-none select-none"
+          style={{ filter: 'drop-shadow(0 10px 28px var(--shadow-portrait, rgba(0,0,0,0.8)))' }}
           loading="eager"
           draggable={false}
         />

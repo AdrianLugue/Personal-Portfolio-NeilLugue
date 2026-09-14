@@ -13,7 +13,7 @@ import pythonCertPdf from '../assets/Python_Certificate.pdf';
 function MagneticWord({ children, className = '', style = {} }) {
   return (
     <span
-      className={`inline-block transition-transform duration-200 hover:-translate-y-0.5 hover:text-[#FFD54F] ${className}`}
+      className={`inline-block transition-transform duration-200 hover:-translate-y-0.5 hover:text-[#805D15] dark:hover:text-[#FFD54F] ${className}`}
       style={style}
     >
       {children}
@@ -128,10 +128,10 @@ function GitHubStatusWidget({ username }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD54F] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FFD54F]" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#805D15] dark:bg-[#FFD54F] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#805D15] dark:bg-[#FFD54F]" />
           </span>
-          <span className="text-[11px] font-mono uppercase tracking-widest text-[#C6B99B] flex items-center gap-1.5">
+          <span className="text-[11px] font-mono uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--gold)' }}>
             <GitBranch size={13} />
             GitHub Commit History
           </span>
@@ -139,7 +139,8 @@ function GitHubStatusWidget({ username }) {
             href={`https://github.com/${username}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] font-mono text-neutral-400 hover:text-[#FFD54F] transition-colors flex items-center gap-1"
+            className="text-[11px] font-mono transition-colors flex items-center gap-1 hover:text-[#805D15] dark:hover:text-[#FFD54F]"
+            style={{ color: 'var(--text-muted)' }}
           >
             @{username}
             <ExternalLink size={10} className="opacity-70" />
@@ -148,8 +149,8 @@ function GitHubStatusWidget({ username }) {
 
         {/* Total contribution counter */}
         {data && (
-          <div className="flex items-center gap-1.5 text-[10.5px] font-mono text-neutral-400">
-            <span className="text-[#FFD54F] font-semibold">{data.total.toLocaleString()}</span> contributions this year
+          <div className="flex items-center gap-1.5 text-[10.5px] font-mono" style={{ color: 'var(--text-muted)' }}>
+            <span className="text-[#805D15] dark:text-[#FFD54F] font-bold">{data.total.toLocaleString()}</span> contributions this year
           </div>
         )}
       </div>
@@ -227,8 +228,15 @@ function GitHubStatusWidget({ username }) {
 
         {/* Floating Tooltip */}
         {hoveredCell && (
-          <div className="absolute bottom-[-24px] left-1/2 -translate-x-1/2 z-30 pointer-events-none px-2.5 py-1 rounded-md bg-[#181512] border border-[#7F7255]/60 shadow-2xl text-[10px] font-mono text-neutral-200 whitespace-nowrap">
-            <span className="text-[#FFD54F] font-semibold">{hoveredCell.count} contribution{hoveredCell.count === 1 ? '' : 's'}</span> on {hoveredCell.displayDate}
+          <div
+            className="absolute bottom-[-24px] left-1/2 -translate-x-1/2 z-30 pointer-events-none px-2.5 py-1 rounded-md border shadow-2xl text-[10px] font-mono whitespace-nowrap"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              borderColor: 'var(--border-card)',
+              color: 'var(--text-primary)',
+            }}
+          >
+            <span className="text-[#805D15] dark:text-[#FFD54F] font-bold">{hoveredCell.count} contribution{hoveredCell.count === 1 ? '' : 's'}</span> on {hoveredCell.displayDate}
           </div>
         )}
       </div>
@@ -263,7 +271,7 @@ export default function About() {
       {/* Section Header matching Tech Stack */}
       <div className="flex flex-col items-center text-center mb-3 sm:mb-4 lg:mb-5 px-4 sm:px-6 shrink-0">
         <div className="reveal-mask">
-          <h2 className="reveal-title font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-[0.03em]">
+          <h2 className="reveal-title font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-[0.03em]" style={{ color: 'var(--text-primary)' }}>
             About <span className="text-gold-gradient">Me</span>
           </h2>
         </div>
@@ -280,17 +288,17 @@ export default function About() {
           </div>
 
           {/* Editorial Figure Caption & Academic Metadata (No Boxes/Cards) */}
-          <div className="space-y-1.5 w-full flex flex-col items-center lg:items-start pt-1 border-t border-white/10 lg:border-t-0">
+          <div className="space-y-1.5 w-full flex flex-col items-center lg:items-start pt-1 border-t lg:border-t-0" style={{ borderColor: 'var(--border-card)' }}>
             <div className="flex items-center gap-2">
-              <span className="font-montserrat font-bold text-xs sm:text-sm text-white tracking-wide">
+              <span className="font-montserrat font-bold text-xs sm:text-sm tracking-wide" style={{ color: 'var(--text-primary)' }}>
                 Neil Adrian Lugue
               </span>
             </div>
 
-            <p className="text-[10.5px] sm:text-[11px] font-mono text-neutral-300 leading-snug">
+            <p className="text-[10.5px] sm:text-[11px] font-mono leading-snug" style={{ color: 'var(--text-muted)' }}>
               Bulacan State University · BSIT
             </p>
-            <p className="text-[10px] sm:text-[10.5px] font-mono text-[#C6B99B] leading-snug">
+            <p className="text-[10px] sm:text-[10.5px] font-mono leading-snug" style={{ color: 'var(--gold)' }}>
               Magna Cum Laude · GPA 1.25 (President's List)
             </p>
 
@@ -311,7 +319,7 @@ export default function About() {
 
           {/* Headline */}
           <div className="reveal-child reveal-delay-1">
-            <h3 className="font-montserrat font-extrabold text-base sm:text-lg lg:text-[20px] xl:text-[24px] 2xl:text-[27px] leading-[1.25] tracking-tight text-white">
+            <h3 className="font-montserrat font-extrabold text-base sm:text-lg lg:text-[20px] xl:text-[24px] 2xl:text-[27px] leading-[1.25] tracking-tight" style={{ color: 'var(--text-primary)' }}>
               {['Building', 'things', 'that'].map((w, i) => (
                 <React.Fragment key={i}>
                   <MagneticWord>{w}</MagneticWord>{' '}
@@ -330,17 +338,17 @@ export default function About() {
           {/* 2-Column Magazine Article Body */}
           <div className="reveal-child reveal-delay-2 grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5 lg:gap-6 pt-0.5">
             <div className="space-y-2 text-left">
-              <p className="text-[11.5px] sm:text-[12px] xl:text-[13px] text-neutral-200 font-light leading-[1.7] text-justify">
+              <p className="text-[11.5px] sm:text-[12px] xl:text-[13px] font-light leading-[1.7] text-justify" style={{ color: 'var(--text-muted)' }}>
                 Good software is more than a nice-looking interface, but the interface is still where people actually meet your work. I care about that and how an app feels to use, how fast it responds, how little friction there is between what someone wants to do and doing it.              </p>
             </div>
             <div className="space-y-2 text-left">
-              <p className="text-[11.5px] sm:text-[12px] xl:text-[13px] text-neutral-300 font-light leading-[1.7] text-justify">
+              <p className="text-[11.5px] sm:text-[12px] xl:text-[13px] font-light leading-[1.7] text-justify" style={{ color: 'var(--text-muted)' }}>
                 I graduated Magna Cum Laude in IT from Bulacan State University, and since then I've focused on building apps that solve real, everyday problems instead of just checking boxes. I've shipped offline-first apps in React Native, built interfaces in React, and played around with WebGL for the visual side and always aiming for something that's solid under the hood and easy to actually use.              </p>
             </div>
           </div>
 
           {/* Hairline Editorial Divider */}
-          <div className="reveal-line border-t border-white/10 w-full" />
+          <div className="reveal-line border-t w-full" style={{ borderColor: 'var(--border-card)' }} />
 
           {/* Raw Floating GitHub Telemetry (Cardless) */}
           <div className="reveal-child reveal-delay-3 pt-0.5">
@@ -355,7 +363,7 @@ export default function About() {
               rel="noopener noreferrer"
               size="sm"
               className="w-full sm:w-auto sm:min-w-[210px]"
-              iconLeft={<GitBranch size={12} />}
+              iconLeft={<GitBranch size={13} className="text-[#805D15] dark:text-[#FFD54F]" />}
               iconRight={<ExternalLink size={11} className="opacity-80 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
             >
               Explore GitHub Repos
@@ -365,7 +373,7 @@ export default function About() {
               size="sm"
               variant="outline"
               className="w-full sm:w-auto sm:min-w-[210px]"
-              iconLeft={<Award size={12} className="text-[#FFD54F]" />}
+              iconLeft={<Award size={13} className="text-[#805D15] dark:text-[#FFD54F]" />}
               iconRight={<ArrowRight size={11} className="opacity-80 transition-transform group-hover:translate-x-0.5" />}
             >
               View Certifications

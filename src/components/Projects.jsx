@@ -16,6 +16,7 @@ import {
 import { PROJECTS_DATA } from '../data/projectsData';
 import Button from './Button';
 import useInView from '../hooks/useInView';
+import { useTheme } from '../context/ThemeContext';
 
 class ShaderErrorBoundary extends Component {
   constructor(props) {
@@ -33,6 +34,7 @@ class ShaderErrorBoundary extends Component {
 
 export default function Projects() {
   const [projectsRef, isRevealed] = useInView({ threshold: 0.15, once: false });
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef(0);
@@ -79,7 +81,7 @@ export default function Projects() {
       {/* Section Header */}
       <div className="flex flex-col items-center text-center mb-2 sm:mb-3.5 px-4 sm:px-6 shrink-0">
         <div className="reveal-mask">
-          <h2 className="reveal-title font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-[0.03em]">
+          <h2 className="reveal-title font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-[0.03em]" style={{ color: 'var(--text-primary)' }}>
             Featured <span className="text-gold-gradient">Projects</span>
           </h2>
         </div>
@@ -152,9 +154,11 @@ export default function Projects() {
                   else if (isNext) handleNext();
                   else if (isActive) navigate(`/projects/${project.id}`);
                 }}
-                className={`absolute w-[92%] sm:w-[86%] lg:w-[80%] xl:w-[78%] max-w-[1320px] rounded-[20px] sm:rounded-[24px] bg-[#0E0C0A] border p-3 sm:p-4 lg:p-5 shadow-[0_24px_70px_rgba(0,0,0,0.95)] transition-all duration-500 ease-out cursor-pointer group ${isActive
-                  ? 'border-[#FFD54F]/30 hover:border-[#FFD54F]/60 hover:shadow-[0_24px_80px_rgba(255,213,79,0.15)]'
-                  : 'border-white/15 hover:border-white/30'
+                className={`absolute w-[92%] sm:w-[86%] lg:w-[80%] xl:w-[78%] max-w-[1320px] rounded-[20px] sm:rounded-[24px] border p-3 sm:p-4 lg:p-5 transition-all duration-500 ease-out cursor-pointer group ${isActive
+                  ? isDark
+                    ? 'border-[#FFD54F]/40 hover:border-[#FFD54F]/70'
+                    : 'border-[#805D15]/50 hover:border-[#805D15]'
+                  : isDark ? 'border-white/10 hover:border-white/20' : 'border-black/10 hover:border-black/20'
                   }`}
                 style={{
                   transform: transformStyle,
@@ -162,14 +166,22 @@ export default function Projects() {
                   zIndex: zIndexStyle,
                   pointerEvents: pointerEvents,
                   willChange: 'transform, opacity',
+                  backgroundColor: 'var(--bg-card)',
+                  boxShadow: isActive ? (isDark ? '0 24px 70px rgba(0,0,0,0.65)' : '0 16px 45px rgba(80,65,40,0.12)') : 'none',
                 }}
               >
                 {/* Wide Mockup Canvas with Live Paper Dither Shader */}
-                <div className="relative w-full h-[160px] sm:h-[200px] md:h-[235px] lg:h-[265px] xl:h-[305px] 2xl:h-[340px] rounded-[14px] sm:rounded-[18px] overflow-hidden bg-[#0A0908] border border-white/10 flex items-center justify-center">
+                <div
+                  className="relative w-full h-[160px] sm:h-[200px] md:h-[235px] lg:h-[265px] xl:h-[305px] 2xl:h-[340px] rounded-[14px] sm:rounded-[18px] overflow-hidden border flex items-center justify-center transition-colors"
+                  style={{
+                    backgroundColor: isDark ? '#0A0908' : 'var(--bg-panel)',
+                    borderColor: 'var(--border-card)',
+                  }}
+                >
                   {/* Live Shader (Mounted only for active card to save GPU resources) */}
                   <div
                     className="absolute inset-0 pointer-events-none transition-opacity duration-700"
-                    style={{ opacity: isActive ? 0.85 : 0.25 }}
+                    style={{ opacity: isActive ? (isDark ? 0.85 : 0.45) : (isDark ? 0.25 : 0.15) }}
                   >
                     {isActive && (
                       <ShaderErrorBoundary fallback={null}>
@@ -180,7 +192,7 @@ export default function Projects() {
                           size={2.2}
                           scale={0.5}
                           colorBack="#00000000"
-                          colorFront={project.accentColor || '#FFD54F'}
+                          colorFront={project.accentColor || (isDark ? '#FFD54F' : '#9E8A60')}
                           className="w-full h-full object-cover"
                         />
                       </ShaderErrorBoundary>
@@ -189,10 +201,11 @@ export default function Projects() {
 
                   {/* Dark Vignette Overlay */}
                   <div
-                    className="absolute inset-0 pointer-events-none"
+                    className="absolute inset-0 pointer-events-none transition-all duration-300"
                     style={{
-                      background:
-                        'radial-gradient(ellipse at 50% 50%, rgba(10,9,8,0.1) 0%, rgba(10,9,8,0.85) 85%, #000000 100%)',
+                      background: isDark
+                        ? 'radial-gradient(ellipse at 50% 50%, rgba(10,9,8,0.1) 0%, rgba(10,9,8,0.85) 85%, #000000 100%)'
+                        : 'radial-gradient(ellipse at 50% 50%, rgba(250,248,244,0.05) 0%, rgba(230,224,211,0.45) 85%, rgba(215,205,188,0.75) 100%)',
                     }}
                   />
 
@@ -200,13 +213,25 @@ export default function Projects() {
                   {isActive && (
                     <div className="absolute top-3 right-3 z-20 hidden sm:flex items-center gap-1.5">
                       {project.isTurnedOver ? (
-                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 border border-[#C6B99B]/30 backdrop-blur-md text-[10px] font-mono text-[#C6B99B] shadow-lg">
-                          <ShieldCheck size={12} className="text-[#FFD54F]" />
+                        <div
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border backdrop-blur-md text-[10px] font-mono shadow-md"
+                          style={{
+                            backgroundColor: 'var(--mobile-menu-bg)',
+                            borderColor: 'var(--border-pill)',
+                            color: 'var(--gold)',
+                          }}
+                        >
+                          <ShieldCheck size={12} className="text-[#805D15] dark:text-[#FFD54F]" />
                           <span>Institutional Capstone</span>
                         </div>
                       ) : project.liveUrl ? (
-                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 border border-emerald-500/30 backdrop-blur-md text-[10px] font-mono text-emerald-400 shadow-lg">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <div
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-500/30 backdrop-blur-md text-[10px] font-mono text-emerald-600 dark:text-emerald-400 shadow-md"
+                          style={{
+                            backgroundColor: 'var(--mobile-menu-bg)',
+                          }}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                           <span>Live Platform</span>
                         </div>
                       ) : null}
@@ -218,11 +243,18 @@ export default function Projects() {
                     <img
                       src={project.mockupImage}
                       alt={`${project.title} Mockup`}
-                      className="relative z-10 max-h-[92%] max-w-[94%] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)] rounded-xl transition-transform duration-500 group-hover:scale-[1.02]"
+                      className="relative z-10 max-h-[92%] max-w-[94%] object-contain rounded-xl transition-transform duration-500 group-hover:scale-[1.02]"
+                      style={{ filter: 'drop-shadow(0 14px 28px var(--shadow-mockup))' }}
                     />
                   ) : (
                     <div className="relative z-10 flex flex-col items-center justify-center text-center p-3 space-y-2">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/[0.04] border border-white/15 flex items-center justify-center text-[#FFD54F] shadow-2xl backdrop-blur-md group-hover:border-[#FFD54F]/40 group-hover:scale-105 transition-all">
+                      <div
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border flex items-center justify-center text-[#805D15] dark:text-[#FFD54F] shadow-lg backdrop-blur-md group-hover:border-[#805D15]/40 dark:group-hover:border-[#FFD54F]/40 group-hover:scale-105 transition-all"
+                        style={{
+                          backgroundColor: 'var(--bg-pill)',
+                          borderColor: 'var(--border-pill)',
+                        }}
+                      >
                         {project.deviceType === 'mobile' ? (
                           <Smartphone size={28} />
                         ) : (
@@ -231,10 +263,10 @@ export default function Projects() {
                       </div>
 
                       <div className="space-y-0.5">
-                        <p className="font-montserrat font-bold text-base sm:text-lg text-white tracking-wide">
+                        <p className="font-montserrat font-bold text-base sm:text-lg tracking-wide" style={{ color: 'var(--text-primary)' }}>
                           {project.title}
                         </p>
-                        <p className="text-[10px] font-mono text-neutral-400">
+                        <p className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>
                           {project.category}
                         </p>
                       </div>
@@ -243,10 +275,16 @@ export default function Projects() {
                 </div>
 
                 {/* Card Footer: Title + Tech Pills + Action */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-white/5 mt-2">
+                <div
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t mt-2"
+                  style={{ borderColor: 'var(--border-card)' }}
+                >
                   {/* Title */}
                   <div className="flex items-center gap-2.5">
-                    <h3 className="font-montserrat font-extrabold text-lg sm:text-xl text-white tracking-tight group-hover:text-[#FFD54F] transition-colors">
+                    <h3
+                      className="font-montserrat font-extrabold text-lg sm:text-xl tracking-tight group-hover:text-[#805D15] dark:group-hover:text-[#FFD54F] transition-colors"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
                       {project.title}
                     </h3>
                   </div>
@@ -256,13 +294,16 @@ export default function Projects() {
                     {project.techStack.slice(0, 4).map((tech) => (
                       <span
                         key={tech}
-                        className="text-[10px] sm:text-[10.5px] font-mono text-neutral-300 bg-white/[0.04] px-2.5 py-0.5 rounded-md border border-white/10"
+                        className="text-[10px] sm:text-[10.5px] font-mono px-2.5 py-0.5 rounded-md border"
+                        style={{
+                          color: 'var(--text-muted)',
+                          backgroundColor: 'var(--bg-pill)',
+                          borderColor: 'var(--border-pill)',
+                        }}
                       >
                         {tech}
                       </span>
                     ))}
-
-
                   </div>
                 </div>
               </div>
@@ -278,7 +319,12 @@ export default function Projects() {
             <button
               onClick={handlePrev}
               aria-label="Previous project"
-              className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white hover:text-[#FFD54F] hover:border-[#FFD54F]/40 hover:bg-white/[0.08] transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
+              className="w-8 h-8 rounded-full border flex items-center justify-center hover:text-[#805D15] dark:hover:text-[#FFD54F] hover:border-[#805D15]/40 dark:hover:border-[#FFD54F]/40 transition-all duration-200 cursor-pointer shadow-md active:scale-95"
+              style={{
+                backgroundColor: 'var(--bg-pill)',
+                borderColor: 'var(--border-pill)',
+                color: 'var(--text-primary)',
+              }}
             >
               <ChevronLeft size={16} />
             </button>
@@ -293,8 +339,10 @@ export default function Projects() {
                     onClick={() => setCurrentIndex(idx)}
                     aria-label={`Go to slide ${idx + 1}`}
                     className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${isActive
-                      ? 'w-7 bg-gradient-to-r from-[#FFD54F] to-[#C6B99B] shadow-[0_0_10px_rgba(255,213,79,0.5)]'
-                      : 'w-2 bg-white/20 hover:bg-white/40'
+                      ? isDark
+                        ? 'w-7 bg-gradient-to-r from-[#FFD54F] to-[#C6B99B] shadow-[0_0_10px_rgba(255,213,79,0.5)]'
+                        : 'w-7 bg-gradient-to-r from-[#805D15] to-[#A07B2D] shadow-[0_0_10px_rgba(122,85,16,0.4)]'
+                      : isDark ? 'w-2 bg-white/20 hover:bg-white/40' : 'w-2 bg-black/20 hover:bg-black/40'
                       }`}
                   />
                 );
@@ -305,7 +353,12 @@ export default function Projects() {
             <button
               onClick={handleNext}
               aria-label="Next project"
-              className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white hover:text-[#FFD54F] hover:border-[#FFD54F]/40 hover:bg-white/[0.08] transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
+              className="w-8 h-8 rounded-full border flex items-center justify-center hover:text-[#805D15] dark:hover:text-[#FFD54F] hover:border-[#805D15]/40 dark:hover:border-[#FFD54F]/40 transition-all duration-200 cursor-pointer shadow-md active:scale-95"
+              style={{
+                backgroundColor: 'var(--bg-pill)',
+                borderColor: 'var(--border-pill)',
+                color: 'var(--text-primary)',
+              }}
             >
               <ChevronRight size={16} />
             </button>

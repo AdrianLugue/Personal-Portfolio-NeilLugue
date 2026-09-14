@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/assets/portrait.png" />
@@ -11,7 +11,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-black text-white font-montserrat antialiased selection:bg-[#7F7255] selection:text-white">
+  <body class="font-montserrat antialiased selection:bg-[#7F7255] selection:text-white">
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('portfolio-theme') || 'dark';
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch(e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

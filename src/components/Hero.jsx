@@ -182,7 +182,7 @@ export default function Hero() {
 
           {/* Subtitle with Dither Glyph Cascade */}
           <div className="pt-0.5 sm:pt-1 reveal-child reveal-delay-1">
-            <p className="text-white/90 font-montserrat font-semibold text-base sm:text-xl lg:text-[22px] xl:text-[26px] tracking-[0.03em]">
+            <p className="font-montserrat font-bold text-base sm:text-xl lg:text-[22px] xl:text-[26px] tracking-[0.03em]" style={{ color: 'var(--text-primary)' }}>
               <DitherCascadeText
                 text="Full-Stack Developer · AI & Web Apps"
                 className="hover:text-[#FFD54F] transition-colors"
@@ -194,20 +194,20 @@ export default function Hero() {
         </div>
 
         {/* Editorial Narrative Sub-tagline */}
-        <p className="text-neutral-300 font-light text-[13px] sm:text-[14px] lg:text-[15px] xl:text-[16px] leading-[1.65] lg:leading-[1.75] max-w-xl reveal-child reveal-delay-2">
+        <p className="font-normal text-[14px] sm:text-[15px] lg:text-[16px] xl:text-[17px] leading-[1.7] lg:leading-[1.8] max-w-xl reveal-child reveal-delay-2" style={{ color: 'var(--text-muted)' }}>
           I build full-stack apps and mobile experiences, from AI-assisted tools to scalable backend systems. Comfortable across{' '}
-          <span className="text-[#FFD54F] font-normal">React Native</span>,{' '}
-          <span className="text-[#FFD54F] font-normal">Python</span>,{' '}
-          <span className="text-[#FFD54F] font-normal">React</span>, and{' '}
-          <span className="text-[#FFD54F] font-normal">PostgreSQL</span>.
+          <span className="font-semibold text-[#805D15] dark:text-[#FFD54F]">React Native</span>,{' '}
+          <span className="font-semibold text-[#805D15] dark:text-[#FFD54F]">Python</span>,{' '}
+          <span className="font-semibold text-[#805D15] dark:text-[#FFD54F]">React</span>, and{' '}
+          <span className="font-semibold text-[#805D15] dark:text-[#FFD54F]">PostgreSQL</span>.
         </p>
 
         {/* Action Buttons & Socials */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 pt-1 reveal-child reveal-delay-3">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 pt-1.5 reveal-child reveal-delay-3">
           <Button
             href="#projects"
             className="w-full sm:w-auto sm:min-w-[190px]"
-            iconRight={<ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}
+            iconRight={<ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#805D15] dark:text-[#FFD54F]" />}
           >
             View Projects
           </Button>
@@ -216,7 +216,7 @@ export default function Hero() {
             download="Neil_Adrian_Lugue_Resume.pdf"
             target="_blank"
             className="w-full sm:w-auto sm:min-w-[190px]"
-            iconLeft={<Download size={14} className="text-[#FFD54F]" />}
+            iconLeft={<Download size={15} className="text-[#805D15] dark:text-[#FFD54F]" />}
           >
             Download Resume
           </Button>
@@ -267,7 +267,7 @@ export default function Hero() {
       {/* RIGHT COLUMN: Frameless Atmospheric Dithered Portrait (50% split - Half Page) */}
       <div className="lg:col-span-6 flex justify-center items-center select-none reveal-child reveal-delay-1 w-full pt-6 sm:pt-8 lg:pt-0">
         <DitherPortrait
-          className="w-full max-w-[340px] xs:max-w-[390px] sm:max-w-[460px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[680px] 2xl:max-w-[780px] h-[390px] xs:h-[450px] sm:h-[520px] md:h-[580px] lg:h-[min(700px,82vh)] xl:h-[min(780px,85vh)] 2xl:h-[min(840px,88vh)] drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
+          className="w-full max-w-[340px] xs:max-w-[390px] sm:max-w-[460px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[680px] 2xl:max-w-[780px] h-[390px] xs:h-[450px] sm:h-[520px] md:h-[580px] lg:h-[min(700px,82vh)] xl:h-[min(780px,85vh)] 2xl:h-[min(840px,88vh)]"
         />
       </div>
 
