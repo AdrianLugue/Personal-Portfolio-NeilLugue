@@ -4,7 +4,8 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Bot, X, Minimize2, Send } from 'lucide-react';
+import { Bot, X, Minimize2, Send, MessageSquareCode, Sparkles } from 'lucide-react';
+import PortfolioMascot from './PortfolioMascot';
 import ChatMessage from './ChatMessage';
 import { getChatResponse, getChipResponse } from '../../services/geminiService';
 import { useTheme } from '../../context/ThemeContext';
@@ -31,12 +32,32 @@ export default function ChatAssistant() {
   const [isLoading, setIsLoading] = useState(false);
   const [usedChips, setUsedChips] = useState([]);
   const [hasOpened, setHasOpened] = useState(false);
-  const [showNudge, setShowNudge] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+  const [isWelcomeExpanded, setIsWelcomeExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const bottomRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
-  const nudgeTimerRef = useRef(null);
+
+  // ── First-load Welcome Animation Sequence ──
+  useEffect(() => {
+    // 1. Wait for mascot to smoothly rise from the bottom, then pop in welcome bubble
+    const bubbleTimer = setTimeout(() => {
+      setShowBubble(true);
+      setIsWelcomeExpanded(true);
+    }, 850);
+
+    // 2. Gently collapse speech bubble into minimized badge after 6.5 seconds
+    const fadeTimer = setTimeout(() => {
+      setIsWelcomeExpanded(false);
+    }, 7000);
+
+    return () => {
+      clearTimeout(bubbleTimer);
+      clearTimeout(fadeTimer);
+    };
+  }, []);
 
   // ── Auto-scroll to bottom on new message ──
   const scrollToBottom = useCallback((smooth = true) => {
@@ -52,19 +73,11 @@ export default function ChatAssistant() {
     scrollToBottom(true);
   }, [messages, scrollToBottom]);
 
-  // ── Show nudge tooltip after 8s on first visit ──
-  useEffect(() => {
-    nudgeTimerRef.current = setTimeout(() => {
-      if (!hasOpened) setShowNudge(true);
-    }, 8000);
-    return () => clearTimeout(nudgeTimerRef.current);
-  }, [hasOpened]);
-
   const openChat = () => {
     setIsOpen(true);
     setIsMinimized(false);
     setHasOpened(true);
-    setShowNudge(false);
+    setIsWelcomeExpanded(false);
     setTimeout(() => {
       inputRef.current?.focus();
       scrollToBottom(false);
@@ -160,79 +173,143 @@ export default function ChatAssistant() {
 
   return (
     <>
-      {/* ── Floating Trigger Button ─────────────────────────────────────── */}
-      <div className="fixed bottom-6 right-5 sm:right-6 z-[9999] flex flex-col items-end gap-2 pointer-events-auto">
-        {/* Nudge Tooltip */}
-        {showNudge && !isOpen && (
-          <div
-            className="relative mb-1 px-3.5 py-2 rounded-xl border shadow-2xl font-montserrat text-[11px] leading-snug max-w-[185px] text-center animate-fadeIn select-none"
-            style={{
-              backgroundColor: isDark ? 'rgba(18,16,14,0.96)' : 'rgba(250,248,244,0.98)',
-              borderColor: 'var(--border-card)',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <span className="font-bold flex items-center justify-center gap-1.5" style={{ color: isDark ? '#FFD54F' : '#7A5510' }}>
-              <Bot size={14} className="text-[#805D15] dark:text-[#FFD54F] shrink-0" /> Ask Neil's AI anything!
-            </span>
-            <button
-              onClick={() => setShowNudge(false)}
-              className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#FAF8F4] dark:bg-[#1A1610] hover:bg-[#E5DFD2] dark:hover:bg-[#2A2315] border text-[var(--text-primary)] text-[9px] flex items-center justify-center cursor-pointer font-bold shadow-sm"
-              style={{ borderColor: 'var(--border-card)' }}
-            >
-              ×
-            </button>
-            <div
-              className="absolute -bottom-1.5 right-5 w-3 h-3 border-r border-b rotate-45"
-              style={{
-                backgroundColor: isDark ? '#12100E' : '#FAF8F4',
-                borderColor: 'var(--border-card)',
-              }}
-            />
+      {/* ── Floating Seamless Mascot (Sticky at Bottom Edge) ─────────────────── */}
+      <div
+        className="fixed bottom-0 right-3 sm:right-6 z-[9999] flex flex-col items-end pointer-events-auto select-none"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Speech Bubble / Minimized AI Status Badge */}
+        {!isOpen && showBubble && (
+          <div className="transition-all duration-500 ease-out">
+            {isWelcomeExpanded || isHovered ? (
+              /* Expanded Welcome Speech Bubble */
+              <div
+                onClick={openChat}
+                className="relative mb-1 mr-1 sm:mr-3 px-3.5 py-2 rounded-2xl border shadow-2xl font-montserrat text-left animate-fadeIn cursor-pointer transition-all duration-300 hover:scale-[1.03] group backdrop-blur-md max-w-[215px] sm:max-w-[235px]"
+                style={{
+                  backgroundColor: isDark ? 'rgba(18,16,14,0.96)' : 'rgba(250,248,244,0.98)',
+                  borderColor: isDark ? 'rgba(255,213,79,0.35)' : 'rgba(128,93,21,0.3)',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                {/* Top row: Live online indicator + AI Companion tag */}
+                <div className="flex items-center justify-between gap-1.5 mb-1 select-none">
+                  <div className="flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                    </span>
+                    <span
+                      className="font-mono font-bold text-[9px] uppercase tracking-wider flex items-center gap-1"
+                      style={{ color: isDark ? '#FFD54F' : '#805D15' }}
+                    >
+                      AI Portfolio Assistant
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsWelcomeExpanded(false);
+                    }}
+                    aria-label="Minimize welcome bubble"
+                    className="w-4 h-4 rounded-full border text-[9px] flex items-center justify-center cursor-pointer font-bold transition-colors opacity-70 hover:opacity-100"
+                    style={{
+                      backgroundColor: 'var(--bg-pill)',
+                      borderColor: 'var(--border-pill)',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* Welcome Message */}
+                <p className="text-[11px] font-medium leading-tight select-none" style={{ color: 'var(--text-primary)' }}>
+                  Hi! I'm Neil's AI companion. Poke me to ask anything!
+                </p>
+
+                {/* Bottom arrow tail pointing to mascot */}
+                <div
+                  className="absolute -bottom-1.5 right-9 w-3 h-3 border-r border-b rotate-45"
+                  style={{
+                    backgroundColor: isDark ? '#12100E' : '#FAF8F4',
+                    borderColor: isDark ? 'rgba(255,213,79,0.35)' : 'rgba(128,93,21,0.3)',
+                  }}
+                />
+              </div>
+            ) : (
+              /* Minimized Status Badge (Unobtrusive after 6s) */
+              <div
+                onClick={openChat}
+                className="relative mb-0.5 mr-2 sm:mr-3 px-2.5 py-1 rounded-full border shadow-lg backdrop-blur-md flex items-center gap-1.5 cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 animate-fadeIn"
+                style={{
+                  backgroundColor: isDark ? 'rgba(18,16,14,0.92)' : 'rgba(250,248,244,0.95)',
+                  borderColor: isDark ? 'rgba(255,213,79,0.35)' : 'rgba(128,93,21,0.3)',
+                }}
+              >
+                <span className="relative flex h-1.5 w-1.5 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                </span>
+                <span
+                  className="font-mono font-bold text-[9px] uppercase tracking-wider flex items-center gap-1"
+                  style={{ color: isDark ? '#FFD54F' : '#805D15' }}
+                >
+                  AI Portfolio Assistant
+                </span>
+              </div>
+            )}
           </div>
         )}
 
-        <button
-          onClick={isOpen ? closeChat : openChat}
-          aria-label={isOpen ? 'Close chat assistant' : 'Open chat assistant'}
-          className={`relative w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer group select-none hover:scale-105 active:scale-95
-            ${isOpen
-              ? isDark
-                ? 'bg-[#181512] border border-white/25 hover:border-white/50 text-white shadow-[0_12px_36px_rgba(0,0,0,0.85)]'
-                : 'bg-[#FAF8F4] border-[1.5px] border-[#805D15] hover:bg-[#E5DFD2] text-[#0A0907] shadow-lg'
-              : isDark
-                ? 'bg-gradient-to-br from-[#2A2418] to-[#14100B] border border-[#FFD54F]/40 hover:border-[#FFD54F] text-[#FFD54F] shadow-[0_0_24px_rgba(255,213,79,0.15)]'
-                : 'bg-[#FAF8F4] border-[1.5px] border-[#805D15] hover:border-[#946300] hover:bg-[#E2DBD0] text-[#805D15] shadow-[0_4px_20px_rgba(122,85,16,0.2)]'
-            }
-          `}
-          style={{ width: '52px', height: '52px' }}
+        {/* Seamless Interactive Mascot */}
+        <div
+          className="relative transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
         >
-          {/* Gold glow pulse ring */}
-          {!isOpen && (
-            <span className={`absolute inset-0 rounded-full ring-1 transition-all duration-300 animate-pulse ${
-              isDark ? 'ring-[#FFD54F]/30 group-hover:ring-[#FFD54F]/60' : 'ring-[#805D15]/30 group-hover:ring-[#805D15]/60'
-            }`} />
-          )}
-
-          {isOpen ? (
-            <X size={20} className={isDark ? 'text-white/80' : 'text-[#0A0907]'} />
-          ) : (
-            <Bot size={22} className="text-[#805D15] dark:text-[#FFD54F]" />
-          )}
-
-          {/* Unread dot */}
+          {/* Unread dot badge */}
           {!isOpen && hasNewMessages && (
-            <span className={`absolute top-0 right-0 w-2.5 h-2.5 rounded-full ${
-              isDark ? 'bg-[#FFD54F] border-2 border-black' : 'bg-[#805D15] border-2 border-[#FAF8F4]'
-            }`} />
+            <span className={`absolute top-2 right-2 w-3 h-3 rounded-full z-20 ${isDark ? 'bg-[#FFD54F] border-2 border-black shadow-md' : 'bg-[#805D15] border-2 border-[#FAF8F4] shadow-md'
+              }`} />
           )}
-        </button>
+
+          {/* Chat active indicator pill */}
+          {isOpen && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                closeChat();
+              }}
+              aria-label="Close chat"
+              className="absolute -top-1 right-2 z-20 w-6 h-6 rounded-full flex items-center justify-center border shadow-lg transition-transform hover:scale-110 active:scale-90 cursor-pointer"
+              style={{
+                backgroundColor: isDark ? '#1C1915' : '#FAF8F4',
+                borderColor: 'var(--border-card)',
+                color: 'var(--text-primary)',
+              }}
+            >
+              <X size={13} />
+            </button>
+          )}
+
+          {/* Interactive Mascot (Always rendered & pokable) */}
+          <PortfolioMascot
+            directions="/mascots/neil-directions.webp"
+            reactions="/mascots/neil-reactions.webp"
+            size={105}
+            label="Neil Mascot"
+            autoWelcome={true}
+            onPoke={() => {
+              if (!isOpen) openChat();
+            }}
+          />
+        </div>
       </div>
 
       {/* ── Chat Modal Panel (Halftone Card Surface) ────────────────────── */}
       <div
         data-lenis-prevent="true"
-        className={`fixed bottom-[78px] right-5 sm:right-6 z-[9998] w-[min(380px,calc(100vw-28px))] transition-all duration-300 origin-bottom-right
+        className={`fixed bottom-[115px] sm:bottom-[120px] right-3 sm:right-6 z-[9998] w-[min(380px,calc(100vw-24px))] transition-all duration-300 origin-bottom-right
           ${isOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}
         `}
       >
@@ -257,13 +334,19 @@ export default function ChatAssistant() {
           {/* ── Header ── */}
           <div className="shrink-0 flex items-center justify-between px-4 py-3 border-b select-none" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-card)' }}>
             <div className="flex items-center gap-2.5 min-w-0">
-              {/* Bot Icon */}
-              <div className="w-7 h-7 rounded-full bg-[#E5DFD2] dark:bg-gradient-to-br dark:from-[#2A2418] dark:to-[#14100B] border border-[#805D15]/30 dark:border-[#FFD54F]/40 flex items-center justify-center text-[#805D15] dark:text-[#FFD54F] shrink-0 shadow-sm">
-                <Bot size={15} />
+              {/* Mascot Avatar in Header */}
+              <div className="w-7 h-7 rounded-full overflow-hidden bg-[#E5DFD2] dark:bg-gradient-to-br dark:from-[#2A2418] dark:to-[#14100B] border border-[#805D15]/30 dark:border-[#FFD54F]/40 flex items-center justify-center shrink-0 shadow-sm">
+                <PortfolioMascot
+                  directions="/mascots/neil-directions.webp"
+                  reactions="/mascots/neil-reactions.webp"
+                  size={28}
+                  label="Neil Mascot Avatar"
+                  autoWelcome={false}
+                />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="font-montserrat font-bold text-xs tracking-wide truncate" style={{ color: 'var(--text-primary)' }}>
-                  Portfolio Assistant
+                  AI Portfolio Assistant
                 </span>
               </div>
             </div>
@@ -337,11 +420,10 @@ export default function ChatAssistant() {
                   type="submit"
                   disabled={!input.trim() || isLoading}
                   aria-label="Send message"
-                  className={`shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-bold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer ${
-                    isDark
-                      ? 'bg-[#FFD54F] hover:bg-[#FFE082] border border-[#FFD54F] text-black shadow-[0_0_12px_rgba(255,213,79,0.25)] hover:shadow-[0_0_18px_rgba(255,213,79,0.4)]'
-                      : 'bg-[#805D15] hover:bg-[#946300] border border-[#805D15] text-white shadow-md'
-                  }`}
+                  className={`shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-bold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer ${isDark
+                    ? 'bg-[#FFD54F] hover:bg-[#FFE082] border border-[#FFD54F] text-black shadow-[0_0_12px_rgba(255,213,79,0.25)] hover:shadow-[0_0_18px_rgba(255,213,79,0.4)]'
+                    : 'bg-[#805D15] hover:bg-[#946300] border border-[#805D15] text-white shadow-md'
+                    }`}
                 >
                   <Send size={13} />
                 </button>

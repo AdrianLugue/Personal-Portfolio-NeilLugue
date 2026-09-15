@@ -160,18 +160,18 @@ export default function Hero() {
   return (
     <div
       ref={heroRef}
-      className={`w-full max-w-[1680px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 xl:gap-14 items-center my-auto py-2 sm:py-4 lg:py-6 xl:py-8 ${isRevealed ? 'is-revealed' : ''
+      className={`w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-center my-auto py-3 sm:py-5 lg:py-8 ${isRevealed ? 'is-revealed' : ''
         }`}
     >
-      {/* LEFT COLUMN: Clean Typography with Dither Glyph Cascade (50% split) */}
-      <div className="lg:col-span-6 flex flex-col items-start justify-center space-y-2.5 sm:space-y-3.5 lg:space-y-4 xl:space-y-5">
+      {/* LEFT COLUMN: Clean Typography with Dither Glyph Cascade (7 cols) */}
+      <div className="lg:col-span-7 flex flex-col items-start justify-center space-y-3 sm:space-y-4 lg:space-y-4 xl:space-y-5">
 
         {/* Heading & Dither Cascade Headline */}
         <div className="space-y-1 sm:space-y-1.5 w-full">
 
           {/* Large Name with Dither Glyph Cascade */}
           <div className="relative group inline-block reveal-child reveal-delay-0">
-            <h1 className="relative font-montserrat font-black text-[32px] xs:text-4xl sm:text-6xl md:text-7xl lg:text-[72px] xl:text-[88px] 2xl:text-[100px] leading-[1.05] tracking-[0.02em] uppercase select-none text-gold-gradient">
+            <h1 className="relative font-montserrat font-black text-[32px] xs:text-4xl sm:text-6xl md:text-7xl lg:text-[70px] xl:text-[84px] 2xl:text-[92px] leading-[1.05] tracking-[0.02em] uppercase select-none text-gold-gradient">
               <DitherCascadeText
                 text="Neil Lugue"
                 staggerMs={40}
@@ -182,7 +182,7 @@ export default function Hero() {
 
           {/* Subtitle with Dither Glyph Cascade */}
           <div className="pt-0.5 sm:pt-1 reveal-child reveal-delay-1">
-            <p className="font-montserrat font-bold text-base sm:text-xl lg:text-[22px] xl:text-[26px] tracking-[0.03em]" style={{ color: 'var(--text-primary)' }}>
+            <p className="font-montserrat font-bold text-base sm:text-xl lg:text-[22px] xl:text-[25px] tracking-[0.03em]" style={{ color: 'var(--text-primary)' }}>
               <DitherCascadeText
                 text="Full-Stack Developer · AI & Web Apps"
                 className="hover:text-[#FFD54F] transition-colors"
@@ -216,7 +216,7 @@ export default function Hero() {
             download="Neil_Adrian_Lugue_Resume.pdf"
             target="_blank"
             className="w-full sm:w-auto sm:min-w-[190px]"
-            iconLeft={<Download size={15} className="text-[#805D15] dark:text-[#FFD54F]" />}
+            iconRight={<Download size={15} className="text-[#805D15] dark:text-[#FFD54F]" />}
           >
             Download Resume
           </Button>
@@ -264,10 +264,10 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* RIGHT COLUMN: Frameless Atmospheric Dithered Portrait (50% split - Half Page) */}
-      <div className="lg:col-span-6 flex justify-center items-center select-none reveal-child reveal-delay-1 w-full pt-6 sm:pt-8 lg:pt-0">
+      {/* RIGHT COLUMN: Frameless Atmospheric Dithered Portrait (5 cols, right-aligned) */}
+      <div className="lg:col-span-5 flex justify-center lg:justify-end items-center select-none reveal-child reveal-delay-1 w-full pt-6 sm:pt-8 lg:pt-0">
         <DitherPortrait
-          className="w-full max-w-[340px] xs:max-w-[390px] sm:max-w-[460px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[680px] 2xl:max-w-[780px] h-[390px] xs:h-[450px] sm:h-[520px] md:h-[580px] lg:h-[min(700px,82vh)] xl:h-[min(780px,85vh)] 2xl:h-[min(840px,88vh)]"
+          className="w-full max-w-[340px] xs:max-w-[400px] sm:max-w-[460px] md:max-w-[520px] lg:max-w-[580px] xl:max-w-[620px] 2xl:max-w-[660px] h-[390px] xs:h-[460px] sm:h-[520px] md:h-[580px] lg:h-[min(680px,80vh)] xl:h-[min(760px,84vh)] 2xl:h-[min(800px,86vh)]"
         />
       </div>
 
