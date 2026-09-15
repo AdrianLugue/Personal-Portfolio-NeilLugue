@@ -83,48 +83,30 @@ export default function PortfolioMascot({
   const boopsRef = useRef({ count: 0, at: 0 });
   const [direction, setDirection] = useState('center');
   const [reaction, setReaction] = useState(null);
-  const [isReady, setIsReady] = useState(false);
   const isTrackingLocked = useRef(true);
 
-  // ── First-Load Smooth Entrance: Rise Up Looking Forward ──
+  // ── First-Load Initialization: Look Forward ──
   useEffect(() => {
-    // 1. Initial state: Looking directly forward
     setDirection('center');
     setReaction(null);
 
-    // 2. Trigger smooth slide-up from bottom
-    const popTimer = setTimeout(() => {
-      setIsReady(true);
-    }, 150);
-
-    // 3. Unlock cursor tracking after entrance completes
     const unlockTimer = setTimeout(() => {
       isTrackingLocked.current = false;
-    }, 1000);
+    }, 600);
 
-    return () => {
-      clearTimeout(popTimer);
-      clearTimeout(unlockTimer);
-    };
+    return () => clearTimeout(unlockTimer);
   }, [autoWelcome]);
 
-  // ── Cursor Tracking ──
+  // ── Desktop Cursor & Mobile Touch / Gyroscope Tracking ──
   useEffect(() => {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      return;
-    }
-
     let sector = -1;
     let pointer = null;
 
     const aim = () => {
-      if (isTrackingLocked.current) {
-        return;
-      }
+      if (isTrackingLocked.current) return;
       const button = buttonRef.current;
-      if (!button || !pointer) {
-        return;
-      }
+      if (!button || !pointer) return;
+
       const box = button.getBoundingClientRect();
       const dx = pointer.x - (box.left + box.width / 2);
       const dy = pointer.y - (box.top + box.height / 2);
@@ -145,16 +127,71 @@ export default function PortfolioMascot({
     };
 
     const onPointerMove = (event) => {
-      pointer = { x: event.clientX, y: event.clientY };
-      aim();
+      if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+        pointer = { x: event.clientX, y: event.clientY };
+        aim();
+      }
+    };
+
+    const onTouchMove = (event) => {
+      if (event.touches && event.touches[0]) {
+        pointer = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+        aim();
+      }
+    };
+
+    const onTouchEnd = () => {
+      setTimeout(() => {
+        if (!isTrackingLocked.current) {
+          sector = -1;
+          setDirection('center');
+        }
+      }, 700);
+    };
+
+    // ── Gyroscope / Device Tilt Tracking for Mobile ──
+    const handleOrientation = (e) => {
+      if (isTrackingLocked.current) return;
+      if (e.gamma === null || e.beta === null) return;
+
+      const gamma = e.gamma; // Left (-90) to Right (+90)
+      const beta = e.beta;   // Pitch (0 to 180) - normal holding is ~45deg
+
+      const TILT_X_THRESH = 8;
+      const TILT_Y_THRESH = 11;
+      const BASE_BETA = 45;
+
+      let dirX = '';
+      if (gamma < -TILT_X_THRESH) dirX = 'left';
+      else if (gamma > TILT_X_THRESH) dirX = 'right';
+
+      let dirY = '';
+      if (beta < BASE_BETA - TILT_Y_THRESH) dirY = 'up';
+      else if (beta > BASE_BETA + TILT_Y_THRESH) dirY = 'down';
+
+      if (dirY && dirX) {
+        setDirection(`${dirY}-${dirX}`);
+      } else if (dirY) {
+        setDirection(dirY);
+      } else if (dirX) {
+        setDirection(dirX);
+      } else {
+        setDirection('center');
+      }
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
     window.addEventListener('scroll', aim, { passive: true });
+    window.addEventListener('deviceorientation', handleOrientation, { passive: true });
 
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('scroll', aim);
+      window.removeEventListener('deviceorientation', handleOrientation);
     };
   }, []);
 
@@ -165,6 +202,11 @@ export default function PortfolioMascot({
   }, []);
 
   const boop = useCallback((e) => {
+    // Request device orientation permission for iOS devices if available
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().catch(() => {});
+    }
+
     timersRef.current.forEach(window.clearTimeout);
     timersRef.current = [];
 
@@ -222,9 +264,6 @@ export default function PortfolioMascot({
         appearance: 'none',
         cursor: 'pointer',
         userSelect: 'none',
-        transform: autoWelcome ? (isReady ? 'translateY(0)' : 'translateY(55px)') : 'translateY(0)',
-        opacity: autoWelcome ? (isReady ? 1 : 0) : 1,
-        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out',
       }}
     >
       <span

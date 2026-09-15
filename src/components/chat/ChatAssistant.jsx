@@ -35,23 +35,32 @@ export default function ChatAssistant() {
   const [showBubble, setShowBubble] = useState(false);
   const [isWelcomeExpanded, setIsWelcomeExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const bottomRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
 
+  // ── Responsive Mobile Detection ──
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // ── First-load Welcome Animation Sequence ──
   useEffect(() => {
-    // 1. Wait for mascot to smoothly rise from the bottom, then pop in welcome bubble
+    // 1. Wait for mascot to be mounted, then pop in welcome bubble
     const bubbleTimer = setTimeout(() => {
       setShowBubble(true);
       setIsWelcomeExpanded(true);
-    }, 850);
+    }, 450);
 
-    // 2. Gently collapse speech bubble into minimized badge after 6.5 seconds
+    // 2. Gently collapse speech bubble into minimized badge (3.8s on mobile, 7s on desktop)
     const fadeTimer = setTimeout(() => {
       setIsWelcomeExpanded(false);
-    }, 7000);
+    }, window.innerWidth < 640 ? 3800 : 7000);
 
     return () => {
       clearTimeout(bubbleTimer);
@@ -175,7 +184,7 @@ export default function ChatAssistant() {
     <>
       {/* ── Floating Seamless Mascot (Sticky at Bottom Edge) ─────────────────── */}
       <div
-        className="fixed bottom-0 right-3 sm:right-6 z-[9999] flex flex-col items-end pointer-events-auto select-none"
+        className="fixed bottom-2 sm:bottom-0 right-2.5 sm:right-6 z-[9999] flex flex-col items-end pointer-events-auto select-none pb-[max(0.25rem,env(safe-area-inset-bottom,0px))]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -186,7 +195,7 @@ export default function ChatAssistant() {
               /* Expanded Welcome Speech Bubble */
               <div
                 onClick={openChat}
-                className="relative mb-1 mr-1 sm:mr-3 px-3.5 py-2 rounded-2xl border shadow-2xl font-montserrat text-left animate-fadeIn cursor-pointer transition-all duration-300 hover:scale-[1.03] group backdrop-blur-md max-w-[215px] sm:max-w-[235px]"
+                className="relative mb-1 mr-1 sm:mr-3 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl border shadow-2xl font-montserrat text-left animate-fadeIn cursor-pointer transition-all duration-300 hover:scale-[1.03] group backdrop-blur-md max-w-[185px] sm:max-w-[235px]"
                 style={{
                   backgroundColor: isDark ? 'rgba(18,16,14,0.96)' : 'rgba(250,248,244,0.98)',
                   borderColor: isDark ? 'rgba(255,213,79,0.35)' : 'rgba(128,93,21,0.3)',
@@ -194,14 +203,14 @@ export default function ChatAssistant() {
                 }}
               >
                 {/* Top row: Live online indicator + AI Companion tag */}
-                <div className="flex items-center justify-between gap-1.5 mb-1 select-none">
+                <div className="flex items-center justify-between gap-1.5 mb-0.5 sm:mb-1 select-none">
                   <div className="flex items-center gap-1.5">
                     <span className="relative flex h-2 w-2 shrink-0">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                     </span>
                     <span
-                      className="font-mono font-bold text-[9px] uppercase tracking-wider flex items-center gap-1"
+                      className="font-mono font-bold text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center gap-1"
                       style={{ color: isDark ? '#FFD54F' : '#805D15' }}
                     >
                       AI Portfolio Assistant
@@ -225,13 +234,13 @@ export default function ChatAssistant() {
                 </div>
 
                 {/* Welcome Message */}
-                <p className="text-[11px] font-medium leading-tight select-none" style={{ color: 'var(--text-primary)' }}>
-                  Hi! I'm Neil's AI companion. Poke me to ask anything!
+                <p className="text-[10px] sm:text-[11px] font-medium leading-tight select-none" style={{ color: 'var(--text-primary)' }}>
+                  {isMobile ? "Hi! Tap me to ask anything!" : "Hi! I'm Neil's AI companion. Poke me to ask anything!"}
                 </p>
 
                 {/* Bottom arrow tail pointing to mascot */}
                 <div
-                  className="absolute -bottom-1.5 right-9 w-3 h-3 border-r border-b rotate-45"
+                  className="absolute -bottom-1.5 right-7 sm:right-9 w-3 h-3 border-r border-b rotate-45"
                   style={{
                     backgroundColor: isDark ? '#12100E' : '#FAF8F4',
                     borderColor: isDark ? 'rgba(255,213,79,0.35)' : 'rgba(128,93,21,0.3)',
@@ -239,10 +248,10 @@ export default function ChatAssistant() {
                 />
               </div>
             ) : (
-              /* Minimized Status Badge (Unobtrusive after 6s) */
+              /* Minimized Status Badge (Unobtrusive) */
               <div
                 onClick={openChat}
-                className="relative mb-0.5 mr-2 sm:mr-3 px-2.5 py-1 rounded-full border shadow-lg backdrop-blur-md flex items-center gap-1.5 cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 animate-fadeIn"
+                className="relative mb-0.5 mr-1.5 sm:mr-3 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border shadow-lg backdrop-blur-md flex items-center gap-1.5 cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 animate-fadeIn"
                 style={{
                   backgroundColor: isDark ? 'rgba(18,16,14,0.92)' : 'rgba(250,248,244,0.95)',
                   borderColor: isDark ? 'rgba(255,213,79,0.35)' : 'rgba(128,93,21,0.3)',
@@ -253,10 +262,10 @@ export default function ChatAssistant() {
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
                 </span>
                 <span
-                  className="font-mono font-bold text-[9px] uppercase tracking-wider flex items-center gap-1"
+                  className="font-mono font-bold text-[8px] sm:text-[9px] uppercase tracking-wider flex items-center gap-1"
                   style={{ color: isDark ? '#FFD54F' : '#805D15' }}
                 >
-                  AI Portfolio Assistant
+                  AI Assistant
                 </span>
               </div>
             )}
@@ -269,7 +278,7 @@ export default function ChatAssistant() {
         >
           {/* Unread dot badge */}
           {!isOpen && hasNewMessages && (
-            <span className={`absolute top-2 right-2 w-3 h-3 rounded-full z-20 ${isDark ? 'bg-[#FFD54F] border-2 border-black shadow-md' : 'bg-[#805D15] border-2 border-[#FAF8F4] shadow-md'
+            <span className={`absolute top-1.5 right-1.5 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full z-20 ${isDark ? 'bg-[#FFD54F] border-2 border-black shadow-md' : 'bg-[#805D15] border-2 border-[#FAF8F4] shadow-md'
               }`} />
           )}
 
@@ -281,14 +290,14 @@ export default function ChatAssistant() {
                 closeChat();
               }}
               aria-label="Close chat"
-              className="absolute -top-1 right-2 z-20 w-6 h-6 rounded-full flex items-center justify-center border shadow-lg transition-transform hover:scale-110 active:scale-90 cursor-pointer"
+              className="absolute -top-1 right-1.5 z-20 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center border shadow-lg transition-transform hover:scale-110 active:scale-90 cursor-pointer"
               style={{
                 backgroundColor: isDark ? '#1C1915' : '#FAF8F4',
                 borderColor: 'var(--border-card)',
                 color: 'var(--text-primary)',
               }}
             >
-              <X size={13} />
+              <X size={isMobile ? 11 : 13} />
             </button>
           )}
 
@@ -296,7 +305,7 @@ export default function ChatAssistant() {
           <PortfolioMascot
             directions="/mascots/neil-directions.webp"
             reactions="/mascots/neil-reactions.webp"
-            size={105}
+            size={isMobile ? 84 : 105}
             label="Neil Mascot"
             autoWelcome={true}
             onPoke={() => {
@@ -309,7 +318,7 @@ export default function ChatAssistant() {
       {/* ── Chat Modal Panel (Halftone Card Surface) ────────────────────── */}
       <div
         data-lenis-prevent="true"
-        className={`fixed bottom-[115px] sm:bottom-[120px] right-3 sm:right-6 z-[9998] w-[min(380px,calc(100vw-24px))] transition-all duration-300 origin-bottom-right
+        className={`fixed bottom-[96px] sm:bottom-[120px] right-2.5 sm:right-6 z-[9998] w-[min(380px,calc(100vw-20px))] transition-all duration-300 origin-bottom-right
           ${isOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}
         `}
       >
